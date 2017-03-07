@@ -10,6 +10,7 @@
 * 就发展前景而言，虚拟机技术目前已经非常成熟，虚拟化软件厂商已经开发出了非常强大的虚拟机管理系统；由于容器技术轻量级和便捷性的特点，它的发展前景更加光明，谷歌公司开发出的Docker以及用于容器编排的Kubernetes吸引了大量的眼球。也许将两者结合，在虚拟机上搭容器，会是一个不错的选择吧。
 
 ## 运行Spark on Mesos
+test.txt文件大小为70M
 ### CPU个数为1，Memory为2G运行wordcount程序
 ![](https://github.com/ffeiDing/OS-Practice/blob/master/hw1/CPU%E4%B8%BA1%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4%E6%88%AA%E5%9B%BE.png)
 ![](https://github.com/ffeiDing/OS-Practice/blob/master/hw1/CPU%E4%B8%BA1%E8%BF%90%E8%A1%8C%E8%B5%84%E6%BA%90%E6%88%AA%E5%9B%BE.png)
