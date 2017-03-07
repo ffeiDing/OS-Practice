@@ -11,5 +11,6 @@
 
 ## 运行Spark on Mesos
 ### CPU个数为1，Memory为2G运行wordcount程序
-![](https://github.com/ffeiDing/OS-Practice/blob/master/hw1/CPU%E4%B8%BA1%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4%E6%88%AA%E5%9B%BE.png "运行时间")
+![运行时间](https://github.com/ffeiDing/OS-Practice/blob/master/hw1/CPU%E4%B8%BA1%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4%E6%88%AA%E5%9B%BE.png)
+![运行资源](https://github.com/ffeiDing/OS-Practice/blob/master/hw1/CPU%E4%B8%BA1%E8%BF%90%E8%A1%8C%E8%B5%84%E6%BA%90%E6%88%AA%E5%9B%BE.png）
 ### CPU个数为2，Memory为2G运行wordcount程序
