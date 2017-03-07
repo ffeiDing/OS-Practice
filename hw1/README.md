@@ -11,5 +11,5 @@
 
 ## 运行Spark on Mesos
 ### CPU个数为1，Memory为2G运行wordcount程序
-![alt text](/Desktop/屏幕快照 2017-03-07 下午1.11.25.png "运行时间")
+![alt text](/Users/dingfeifei/Desktop/屏幕快照 2017-03-07 下午1.11.25.png "运行时间")
 ### CPU个数为2，Memory为2G运行wordcount程序
