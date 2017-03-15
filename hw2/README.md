@@ -14,7 +14,7 @@
 ### 2、源码中具体位置
 
 * Zookeeper：
-* Mesos master：
+* Mesos master：位于mesos-1.1.0/src/master文件夹中，其中的main.cpp是入口程序，
 * Standby master：
 * Mesos slave：
 * Framework：
