@@ -10,3 +10,12 @@
 * Mesos slave：接收Mesos master发来的Task，调度Framework executor去执行。
 * Framework：例如Spark，Hadoop等，包括Scheduler和Executor两部分。Scheduler启动后注册到Master，决定是否接收Master发送来的Resource offer消息，并反馈给Master。Executor由Slave调用，执行Framework的Task。
 * Task：Task由Slave调度Exexutor执行，可以是长生命周期的，也可以是短生命周期的。
+
+### 2、源码中具体位置
+
+* Zookeeper：
+* Mesos master：
+* Standby master：
+* Mesos slave：
+* Framework：
+* Task：
