@@ -14,7 +14,7 @@
 ### 2、源码中具体位置
 
 * Zookeeper：
-* Master：位于mesos-1.1.0/src/master文件夹中，其中的main.cpp是入口程序，封装了Google的gflags来解析命令行参数和环境变量。在Master的初始化过程中，首先初始化Allocator，默认的Allocator是内置的Hierarchical Dominant Resource Fairness allocator。然后监听消息，注册处理函数，当收到消息时调用相应的函数。最后竞争成为Master中的Leader，或者检测当前的Leader。
+* Master：位于mesos-1.1.0/src/master文件夹中，其中的main.cpp是入口程序，封装了Google的gflags来解析命令行参数和环境变量。在Master的初始化过程中，首先初始化Allocator，默认的Allocator是内置的Hierarchical Dominant Resource Fairness allocator。然后监听消息，注册处理函数，当收到消息时调用相应的函数。最后竞争（默认Zookeeper)成为Master中的Leader，或者检测当前的Leader。
 * Mesos slave：
 * Framework：
 * Task：
