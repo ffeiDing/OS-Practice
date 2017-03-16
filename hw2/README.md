@@ -19,3 +19,7 @@
 * Test Framework：位于mesos-1.1.0/src/examples/test_framework.cpp中，在main函数中，首先指定Executor的uri，配置Executor的信息，创建Scheduler。
 * Test Scheduler：位于mesos-1.1.0/src/scheduler文件夹中，其中，运行MesosSchedulerDriver的代码在mesos-1.1.0/src/sched/sched.cpp中，首先检测Leader，创建一个线程，然后注册消息处理函数，最终调用了Test Framework的resourceOffers函数，根据得到的offers，创建一系列Tasks，然后调用driver的launchTasks函数，最终向Leader发送launchTasks的消息。
 * Test Executor：位于mesos-1.1.0/src/examples/test_executor.cpp中，运行MesosExecutorDriver和Slave进行通信。MesosExecutorDriver的实现在mesos-1.1.0/src/exec/exec.cpp中，类似MesosSchedulerDriver，它创建了一个线程，处理相应的消息。
+
+### 3、工作流程
+
+Mesos
