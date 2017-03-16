@@ -43,4 +43,4 @@
 
 ### 2、与传统操作系统上运行程序对比
 
-二者的差异性主要体现在资源分配方式上。Framework在Mesos上运行时，Master向Framework报告可用
+二者的差异性主要体现在资源分配方式上。Framework在Mesos上运行时，Master向Framework报告可用的资源，至于是否接收由Framework自己决定；而程序运行在传统操作系统上时，进程向内核申请资源，申请一般都会被满足。
