@@ -32,10 +32,11 @@
 
 (5) Framework依据资源信息向Slave发起任务启动命令，开始调度工作。
 
+
 ## 二、框架在Mesos上的运行过程与在传统操作系统上运行程序对比
 ### 1、框架在Mesos上的运行过程
 <div align=center><img width="50%" height="50%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos流程.png"/></div>
-如上图所示，Mesos的主要功能是分布式集群资源的分配，任务的调度和执行由Framework自己完成：
+如上图所示，Framework运行在Mesos上，任务的调度和执行由Framework自己完成：
 
 * Slave1向Master汇报其有<4CPU,4GB RAM>的空闲资源。
 * Master收到Slave1发来的消息后，调用分配模块，发送一个描述Slave1当前空闲资源的resource offer给Framework1。
