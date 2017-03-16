@@ -39,5 +39,6 @@
 * Framework1的调度器回复Master，需要运行两个task在Slave1上，第一个task需要资源<2CPU, 1GB RAM>，第二个task需要资源<1CPU, 2GB RAM>。
 * Master把任务需求资源发送给Slave1，Slave1分配适当的资源给Framework1的Executor，然后Executor开始执行这两个任务，因为Slave1还剩<1CPU，1GB RAM>的资源还未分配，分配模块可以将这些资源提供给Framwork2来使用。
 
+* Master把任务需求资源发送给Slave1，Slave1分配适当的资源给Framework1的Executor，然后Executor开始执行这两个任务，因为Slave1还剩<1CPU，1GB RAM>的资源还未分配，分配模块可以将这些资源提供给Framwork2来使用。
 
-
+### 2、与传统操作系统上运行程序对比
