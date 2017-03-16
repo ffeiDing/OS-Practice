@@ -21,5 +21,5 @@
 * Test Executor：位于mesos-1.1.0/src/examples/test_executor.cpp中，运行MesosExecutorDriver和Slave进行通信。MesosExecutorDriver的实现在mesos-1.1.0/src/exec/exec.cpp中，类似MesosSchedulerDriver，它创建了一个线程，处理相应的消息。
 
 ### 3、工作流程
-
+<div align=center><img width="75%" height="75%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos%E6%A1%86%E6%9E%B6%E5%9B%BE.png"/></div>
 Mesos
