@@ -21,6 +21,20 @@
 * Test Executor：位于mesos-1.1.0/src/examples/test_executor.cpp中，运行MesosExecutorDriver和Slave进行通信。MesosExecutorDriver的实现在mesos-1.1.0/src/exec/exec.cpp中，类似MesosSchedulerDriver，它创建了一个线程，处理相应的消息。
 
 ### 3、工作流程
+
+(1)集群中的所有Slave节点会和Master定期进行通信，将自己的资源信息同步到Master，Master由此获知到整个集群的资源状况
+
+(2)Mater会和已注册、受信任的Framework进行交互，定期将最新的资源情况发送给Framework，当Framework前端有工作需求时，将选择接收资源，否则拒绝
+
+(3)前端用户提交了一个工作需求给Framework
+
+(4)Framework接收slave master发过来的资源信息
+
+(5)Framework依据资源信息向slave发起任务启动命令，开始调度工作
+
+
+## 二、框架在Mesos上的运行过程与在传统操作系统上运行程序对比
+### 1、框架在Mesos上的运行过程
 <div align=center><img width="50%" height="50%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos流程.png"/></div>
 如上图所示，Mesos的主要功能是分布式集群资源的分配，任务的调度和执行由Framework自己完成：
 
@@ -30,5 +44,4 @@
 * Master把任务需求资源发送给Slave1，Slave1分配适当的资源给Framework1的Executor，然后Executor开始执行这两个任务，因为Slave1还剩<1CPU,1GB RAM>的资源还未分配，分配模块可以将这些资源提供给Framwork2来使用。
 
 
-## 二、框架在Mesos上的运行过程与在传统操作系统上运行程序对比
-### 1、框架在Mesos上的运行过程
+
