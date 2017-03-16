@@ -41,6 +41,7 @@
 * Master把任务需求资源发送给Slave1，Slave1分配适当的资源给Framework1的Executor，然后Executor开始执行这两个任务，因为Slave1还剩（1CPU，1GB RAM）的资源还未分配，分配模块可以将这些资源提供给Framwork2来使用。
 <div align=center><img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Spark%20框架图.png"/></div>
 以Spark on Mesos为例，根据Spark官方文档，从Spark的视角看，Mesos将Spark master替换为了cluster manager，Mesos决定任务的调度和执行。
+
 ### 2、与传统操作系统上运行程序对比
 
 二者的差异性主要体现在资源分配方式上。Framework在Mesos上运行时，Master向Framework报告可用的资源，至于是否接收由Framework自己决定；而程序运行在传统操作系统上时，进程向内核申请资源，申请一般都会被满足。
