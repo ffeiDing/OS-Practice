@@ -22,15 +22,11 @@
 
 ### 3、工作流程
 
-(1)集群中的所有Slave节点会和Master定期进行通信，将自己的资源信息同步到Master，Master由此获知到整个集群的资源状况
-
-(2)Mater会和已注册、受信任的Framework进行交互，定期将最新的资源情况发送给Framework，当Framework前端有工作需求时，将选择接收资源，否则拒绝
-
-(3)前端用户提交了一个工作需求给Framework
-
-(4)Framework接收slave master发过来的资源信息
-
-(5)Framework依据资源信息向slave发起任务启动命令，开始调度工作
+(1) 集群中的所有Slave节点会和Master定期进行通信，将自己的资源信息同步到Master，Master由此获知到整个集群的资源状况
+(2) Mater会和已注册、受信任的Framework进行交互，定期将最新的资源情况发送给Framework，当Framework前端有工作需求时，将选择接收资源，否则拒绝
+(3) 前端用户提交了一个工作需求给Framework
+(4) Framework接收slave master发过来的资源信息
+(5) Framework依据资源信息向slave发起任务启动命令，开始调度工作
 
 
 ## 二、框架在Mesos上的运行过程与在传统操作系统上运行程序对比
