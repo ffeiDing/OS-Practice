@@ -42,3 +42,5 @@
 * Master把任务需求资源发送给Slave1，Slave1分配适当的资源给Framework1的Executor，然后Executor开始执行这两个任务，因为Slave1还剩<1CPU，1GB RAM>的资源还未分配，分配模块可以将这些资源提供给Framwork2来使用。
 
 ### 2、与传统操作系统上运行程序对比
+
+二者的差异性主要体现在资源分配方式上。Framework在Mesos上运行时，Master向Framework报告可用
