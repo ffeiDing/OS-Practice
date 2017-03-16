@@ -25,3 +25,6 @@
 如上图所示，Mesos的主要功能是分布式集群资源的分配，任务的调度和执行由Framework自己完成：
 
 * Slave1向Master汇报其有<4CPU,4GB RAM>的空闲资源
+* Master收到Slave1发来的消息后，调用分配模块，发送一个描述Slave1当前空闲资源的resource offer给Framework1
+* Framework1的调度器回复Master，需要运行两个task在Slave1上，第一个task需要资源<2CPU, 1GB RAM>，第二个task需要资源<1CPU, 2GB RAM>
+* Master把任务需求资源发送给Slave1，Slave1分配适当的资源给Framework1的Executor，然后Executor开始执行这两个任务，因为Slave1还剩<1CPU,1GB RAM>的资源还未分配，分配模块可以将这些资源提供给Framwork2来使用。
