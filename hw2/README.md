@@ -3,6 +3,7 @@
 ### 1、Mesos组成结构
 <div align=center><img width="75%" height="75%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos%E6%A1%86%E6%9E%B6%E5%9B%BE.png"/></div>
 如上图所示，Mesos主要组件有：
+
 * Zookeeper：选举出Mesos master。
 * Mesos master：接收Mesos slave和Framework scheduler的注册，分配资源。
 * Standby master：作为备用Master，与Master节点运行在同一集群中。在Leader宕机后Zookeeper可以很快地从其中选举出新的Leader，恢复状态。
