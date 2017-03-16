@@ -11,7 +11,7 @@
 * Framework：例如Spark，Hadoop等，包括Scheduler和Executor两部分。Scheduler启动后注册到Master，决定是否接收Master发送来的Resource offer消息，并反馈给Master。Executor由Slave调用，执行Framework的Task。
 * Task：Task由Slave调度Exexutor执行，可以是长生命周期的，也可以是短生命周期的。
 
-### 2、源码中具体位置
+### 2、源码中具体位置与工作流程
 
 * Zookeeper：位于mesos-1.1.0/src/zookeeper文件夹中，其中detector.cpp用来检测当前的Leader，contender.cpp用来进行Leader的竞争。
 * Master：位于mesos-1.1.0/src/master文件夹中，其中的main.cpp是入口程序，封装了Google的gflags来解析命令行参数和环境变量。在Master的初始化过程中，首先初始化Allocator，默认的Allocator是内置的Hierarchical Dominant Resource Fairness allocator。然后监听消息，注册处理函数，当收到消息时调用相应的函数。最后竞争（默认Zookeeper)成为Master中的Leader，或者检测当前的Leader。
