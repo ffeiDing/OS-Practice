@@ -22,4 +22,6 @@
 
 ### 3、工作流程
 <div align=center><img width="50%" height="50%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos流程.png"/></div>
-Mesos
+如上图所示，Mesos的主要功能是分布式集群资源的分配，任务的调度和执行由Framework自己完成：
+
+* Slave1向Master汇报其有<4CPU,4GB RAM>的空闲资源
