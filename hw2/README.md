@@ -31,7 +31,7 @@
 
 ## 二、框架在Mesos上的运行过程与在传统操作系统上运行程序对比
 ### 1、框架在Mesos上的运行过程
-<div align=center><img width="50%" height="50%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos流程.png"/></div>
+<div align=center><img width="60%" height="60%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Spark%20框架图.png"/></div>
 如上图所示，Framework运行在Mesos上，任务的调度和执行由Framework自己完成：
 
 * Slave1向Master汇报其有（4CPU，4GB RAM）的空闲资源。
