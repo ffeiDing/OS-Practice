@@ -123,4 +123,16 @@ Attributes attributes;
     attributes = Attributes::parse(flags.attributes.get());
   }
 ```
-* 
+* 初始化hostname
+* 初始化statusUpdateManager
+```
+statusUpdateManager->initialize(defer(self(), &Slave::forward, lambda::_1)
+    .operator std::function<void(StatusUpdate)>());
+```
+* 注册消息处理函数，伪码如下（对原代码做了整理，对几个重要的消息处理函数添加了注释）：
+```
+install<SlaveRegisteredMessage>(); //Slave注册成功的消息
+install<SlaveReregisteredMessage>();
+install<RunTaskMessage>(); //运行一个Task的消息
+
+```
