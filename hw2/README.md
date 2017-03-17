@@ -151,3 +151,5 @@ install<PingSlaveMessage>();
 ```
 
 ## 三、Mesos资源调度算法
+### 1、DRF算法
+Mesos默认的资源调度算法是DRF（主导资源公平算法 Dominant Resource Fairness），
