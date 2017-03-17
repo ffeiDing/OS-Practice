@@ -53,7 +53,7 @@ mesos-1.1.0/src/master/master.cpp对Master进行了初始化，主要是通过<c
 在<code>initialize()</code>初始化函数中：
 
 * 在进行一系列权限认证、权值设置等操作后，首先初始化了Allocator
-```C++
+```C
 // Initialize the allocator.
   allocator->initialize(
       flags.allocation_interval,
