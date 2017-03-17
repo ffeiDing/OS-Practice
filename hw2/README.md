@@ -48,5 +48,7 @@
 
 ## 三、Master和Slave的初始化过程
 ### 1、Master初始化过程
-mesos-1.1.0/src/master/master.cpp对Master进行了初始化，主要是通过<code>master()</code>构造函数首先初始化Allocator，默认的Allocator是内置的Hierarchical Dominant Resource Fairness allocator。然后监听消息，注册处理函数，当收到消息时调用相应的函数。最后竞争（默认Zookeeper)成为Master中的Leader，或者检测当前的Leader。
+mesos-1.1.0/src/master/master.cpp对Master进行了初始化，主要是通过<code>master()</code>构造函数和<code>initialize()</code>初始化函数
+在<code>master()</code>构造函数中
+首先初始化Allocator，默认的Allocator是内置的Hierarchical Dominant Resource Fairness allocator。然后监听消息，注册处理函数，当收到消息时调用相应的函数。最后竞争（默认Zookeeper)成为Master中的Leader，或者检测当前的Leader。
 ### 2、Slave初始化过程
