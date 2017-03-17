@@ -101,4 +101,7 @@ install<AuthenticateMessage>();
 ```
 ### 2、Slave初始化过程
 mesos-1.1.0/src/slave/slave.cpp对Slave进行了初始化，主要是通过<code>initialize()</code>初始化函数。初始化之前，相关命令行解析等工作前文已经提到，下面仅分析初始化函数。
+
 在<code>slave::initialize()</code>初始化函数中：
+
+* 与<code>master::initialize()</code>类似，在权限认证、确认工作目录存在、磁盘可达等一系列预备工作后
