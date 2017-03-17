@@ -104,4 +104,10 @@ mesos-1.1.0/src/slave/slave.cpp对Slave进行了初始化，主要是通过<code
 
 在<code>slave::initialize()</code>初始化函数中：
 
-* 与<code>master::initialize()</code>类似，在权限认证、确认工作目录存在、磁盘可达等一系列预备工作后
+* 与<code>master::initialize()</code>类似，在完成权限认证等一系列预备工作后，初始化资源预估器
+```
+Try<Nothing> initialize =
+    resourceEstimator->initialize(defer(self(), &Self::usage));
+```
+* 
+
