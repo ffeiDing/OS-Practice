@@ -89,5 +89,14 @@ install<ExitedExecutorMessage>();
 install<UpdateSlaveMessage>(); //Slave更新
 install<AuthenticateMessage>();
 ```
-首先初始化Allocator，默认的Allocator是内置的Hierarchical Dominant Resource Fairness allocator。然后监听消息，注册处理函数，当收到消息时调用相应的函数。最后竞争（默认Zookeeper)成为Master中的Leader，或者检测当前的Leader。
+* 设置http路由
+* 开始竞争成为Leader，或者检测当前的Leader
+```
+// Start contending to be a leading master and detecting the current
+  // leader.
+  contender->contend()
+    .onAny(defer(self(), &Master::contended, lambda::_1));
+  detector->detect()
+    .onAny(defer(self(), &Master::detected, lambda::_1));
+```
 ### 2、Slave初始化过程
