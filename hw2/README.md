@@ -134,5 +134,18 @@ statusUpdateManager->initialize(defer(self(), &Slave::forward, lambda::_1)
 install<SlaveRegisteredMessage>(); //Slave注册成功的消息
 install<SlaveReregisteredMessage>();
 install<RunTaskMessage>(); //运行一个Task的消息
-
+install<RunTaskGroupMessage>();
+install<KillTaskMessage>(); //停止运行一个Task的消息
+install<ShutdownExecutorMessage>();
+install<ShutdownFrameworkMessage>();
+install<FrameworkToExecutorMessage>();
+install<UpdateFrameworkMessage>();
+install<CheckpointResourcesMessage>();
+install<StatusUpdateAcknowledgementMessage>();
+install<RegisterExecutorMessage>(); //注册一个Executor的消息
+install<ReregisterExecutorMessage>();
+install<StatusUpdateMessage>(); //状态更新消息
+install<ExecutorToFrameworkMessage>();
+install<ShutdownMessage>();
+install<PingSlaveMessage>();
 ```
