@@ -149,3 +149,5 @@ install<ExecutorToFrameworkMessage>();
 install<ShutdownMessage>();
 install<PingSlaveMessage>();
 ```
+
+## 三、Mesos资源调度算法
