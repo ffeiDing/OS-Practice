@@ -50,9 +50,9 @@
 ### 1、Master初始化过程
 mesos-1.1.0/src/master/master.cpp对Master进行了初始化，主要是通过<code>initialize()</code>初始化函数。初始化之前，相关命令行解析等工作前文已经提到，下面仅分析初始化函数。
 
-在<code>initialize()</code>初始化函数中：
+在<code>master::initialize()</code>初始化函数中：
 
-* 在进行一系列权限认证、权值设置等操作后，首先初始化了Allocator
+* 在进行一系列权限认证、权值设置等操作后，初始化Allocator
 ```
 // Initialize the allocator.
  allocator->initialize(
@@ -100,3 +100,5 @@ install<AuthenticateMessage>();
    .onAny(defer(self(), &Master::detected, lambda::_1));
 ```
 ### 2、Slave初始化过程
+mesos-1.1.0/src/slave/slave.cpp对Slave进行了初始化，主要是通过<code>initialize()</code>初始化函数。初始化之前，相关命令行解析等工作前文已经提到，下面仅分析初始化函数。
+在<code>slave::initialize()</code>初始化函数中：
