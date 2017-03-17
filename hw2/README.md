@@ -55,12 +55,12 @@ mesos-1.1.0/src/master/master.cpp对Master进行了初始化，主要是通过<c
 * 在进行一系列权限认证、权值设置等操作后，首先初始化了Allocator
 ```
 // Initialize the allocator.
-  allocator->initialize(
-      flags.allocation_interval,
-      defer(self(), &Master::offer, lambda::_1, lambda::_2),
-      defer(self(), &Master::inverseOffer, lambda::_1, lambda::_2),
-      weights,
-      flags.fair_sharing_excluded_resource_names);
+ allocator->initialize(
+     flags.allocation_interval,
+     defer(self(), &Master::offer, lambda::_1, lambda::_2),
+     defer(self(), &Master::inverseOffer, lambda::_1, lambda::_2),
+     weights,
+     flags.fair_sharing_excluded_resource_names);
 ```
 * 时钟开始计时
 ```
@@ -92,11 +92,11 @@ install<AuthenticateMessage>();
 * 设置http路由
 * 开始竞争成为Leader，或者检测当前的Leader
 ```
-// Start contending to be a leading master and detecting the current
-  // leader.
-  contender->contend()
-    .onAny(defer(self(), &Master::contended, lambda::_1));
-  detector->detect()
-    .onAny(defer(self(), &Master::detected, lambda::_1));
+ // Start contending to be a leading master and detecting the current
+ // leader.
+ contender->contend()
+   .onAny(defer(self(), &Master::contended, lambda::_1));
+ detector->detect()
+   .onAny(defer(self(), &Master::detected, lambda::_1));
 ```
 ### 2、Slave初始化过程
