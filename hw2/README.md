@@ -68,13 +68,26 @@ startTime = Clock::now();
 ```
 * 注册消息处理函数，伪码如下（对原代码做了整理，对几个重要的消息处理函数添加了注释）：
 ```
-install<SubmitSchedulerRequest>(...);
-install<RegisterFrameworkMessage>(...); //Framework注册
-install<ReregisterFrameworkMessage>(...);
-install<UnregisterFrameworkMessage>(...);
-install<DeactivateFrameworkMessage>(...);
-install<ResourceRequestMessage>(...); //Slave发送来资源的要求
-install<LaunchTasksMessage>(...); //启动Task
+install<SubmitSchedulerRequest>();
+install<RegisterFrameworkMessage>(); //Framework注册
+install<ReregisterFrameworkMessage>();
+install<UnregisterFrameworkMessage>();
+install<DeactivateFrameworkMessage>();
+install<ResourceRequestMessage>(); //Slave发送来资源的要求
+install<LaunchTasksMessage>(); //Framework发送来启动Task的消息
+install<ReviveOffersMessage>(); 
+install<KillTaskMessage>(); //Framework发送来终止Task的消息
+install<StatusUpdateAcknowledgementMessage>(); 
+install<FrameworkToExecutorMessage>();
+install<RegisterSlaveMessage>(); //Slave注册
+install<ReregisterSlaveMessage>();
+install<UnregisterSlaveMessage>();
+install<StatusUpdateMessage>(); //状态更新
+install<ExecutorToFrameworkMessage>();
+install<ReconcileTasksMessage>();
+install<ExitedExecutorMessage>();
+install<UpdateSlaveMessage>(); //Slave更新
+install<AuthenticateMessage>();
 ```
 首先初始化Allocator，默认的Allocator是内置的Hierarchical Dominant Resource Fairness allocator。然后监听消息，注册处理函数，当收到消息时调用相应的函数。最后竞争（默认Zookeeper)成为Master中的Leader，或者检测当前的Leader。
 ### 2、Slave初始化过程
