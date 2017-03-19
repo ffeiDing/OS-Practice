@@ -159,4 +159,4 @@ install<PingSlaveMessage>();
 * DRF是envy-free（非嫉妒）的，没有一个用户会与其他用户交换资源分配。
 * DRF分配是Pareto efficient，即不可能通过减少一个用户的资源分配来提升另一个用户的资源分配。
 ### 2、在源码中的位置
-DRF算法的源码位于mesos-1.1.0/src/master/allocator/sorter/drf文件夹中，其中的sorter.cpp用来对framework进行排序、add、remove、update等操作。mesos-1.1.0/src/master/allocator/mesos/hierarchical.cpp文件是分层分配器。
+DRF算法的源码位于mesos-1.1.0/src/master/allocator/sorter/drf文件夹中，其中的sorter.cpp用来对framework进行排序、add、remove、update等操作。mesos-1.1.0/src/master/allocator/mesos/hierarchical.cpp文件是分层分配器，它调用了sorter.cpp和sorter.hpp进行功能上的具体实现。
