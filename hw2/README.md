@@ -154,3 +154,10 @@ install<PingSlaveMessage>();
 ### 1、DRF算法
 * Mesos默认的资源调度算法是DRF（主导资源公平算法 Dominant Resource Fairness），它是一种支持多资源的最大-最小公平分配机制。类似网络拥塞时带宽的分配，在公平的基础上，尽可能满足更大的需求。但Mesos更为复杂一些，因为有主导资源（支配性资源）的存在。比如假设系统中有9个CPU，18GB RAM，A用户请求的资源为（1 CPU, 4 GB），B用户请求的资源为（3 CPU， 1 GB），那么A的支配性资源为内存（CPU占比1/9，内存占比4/18），B的支配性资源为CPU（CPU占比3/9，内存占比1/18）。
 * DRF算法的目标是使每个用户获得相同比例的支配性资源，给A用户（3 CPU，12 GB），B用户（6 CPU，2 GB），这样A获得了2/3的内存资源，B获得了2/3的CPU资源。
+* DRF鼓励用户去共享资源，如果资源是在用户之间被平均地切分，会保证没有用户会拿到更多资源。
+* DRF是strategy-proof，即用户不能通过欺骗来获取更多地资源分配。
+* DRF是envy-free（非嫉妒）的，没有一个用户会与其他用户交换资源分配。
+* DRF分配是Pareto efficient，即不可能通过减少一个用户的资源分配来提升另一个用户的资源分配。
+### 2、在源码中的位置
+DRF算法的源码位于mesos-1.1.0/src/master/allocator/sorter/drf文件夹中，其中的sorter.cpp用来对framework进行排序、add、remove、update等操作。
+
