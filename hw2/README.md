@@ -390,4 +390,6 @@ if __name__ == '__main__':
             driver.sendFrameworkMessage(encode_data(str(vPi)))
 ```
 
-样例仅仅是简单输出了“Hello from task...”，此处需要修改为计算Pi值的具体程序
+样例仅仅是简单输出了“Hello from task...”，此处需要修改为计算Pi值的具体程序，并将单次计算结果封装传递。
+
+
