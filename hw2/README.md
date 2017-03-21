@@ -162,3 +162,4 @@ install<PingSlaveMessage>();
 DRF算法的源码位于mesos-1.1.0/src/master/allocator/sorter/drf文件夹中，其中的sorter.cpp用来对framework进行排序、add、remove、update等操作。mesos-1.1.0/src/master/allocator/mesos/hierarchical.cpp文件是分层分配器，它调用了sorter.cpp和sorter.hpp进行功能上的具体实现。
 
 ## 五、写一个完成简单工作的框架
+使用python语言，扩展了豆瓣的pymesos/examples文件夹
