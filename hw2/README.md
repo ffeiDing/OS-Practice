@@ -392,7 +392,7 @@ if __name__ == '__main__':
 
 样例仅仅是简单输出了“Hello from task...”，此处需要修改为计算Pi值的具体程序，并将单次计算结果封装传递。
 
-运行结果截图如下，可以看到计算出的π的结果3.1414582还是比较接近原值的，如果加大数据量，结果应该会更加准确：
+运行结果截图如下，可以看到计算出的π的结果3.1414582，还是比较接近原值的，如果加大数据量，结果应该会更加准确：
 <div align=center><img width="75%" height="75%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/运行结果截图.png"/></div>
 
 资源使用情况如下：
