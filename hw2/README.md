@@ -393,4 +393,4 @@ if __name__ == '__main__':
 样例仅仅是简单输出了“Hello from task...”，此处需要修改为计算Pi值的具体程序，并将单次计算结果封装传递。
 
 运行结果截图如下：
-<div align=center><img width="75%" height="75%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos%E6%A1%86%E6%9E%B6%E5%9B%BE.png"/></div>
+<div align=center><img width="75%" height="75%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/运行结果截图.png"/></div>
