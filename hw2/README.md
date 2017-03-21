@@ -396,5 +396,4 @@ if __name__ == '__main__':
 <div align=center><img width="75%" height="75%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/运行结果截图.png"/></div>
 
 资源使用情况如下：
-<div align=center><img width="75%" height="75%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/资源使用情况截图.png"/></div>
-、
+<div align=center><img width="30%" height="30%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/资源使用情况截图.png"/></div>
