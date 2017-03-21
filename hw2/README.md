@@ -163,7 +163,8 @@ DRF算法的源码位于mesos-1.1.0/src/master/allocator/sorter/drf文件夹中�
 
 ## 五、写一个完成简单工作的框架
 
-使用python语言，扩展了豆瓣的pymesos/examples文件夹下的scheduler.py和executor.py。
+使用python语言，扩展了豆瓣的pymesos/examples文件夹下的scheduler.py和executor.py，使用蒙特卡洛法计算π的值。蒙特卡洛算法是通过概率来计算π的值的。对于一个单位为1的正方形，以其某一个顶点为圆心，边为半径在正方形内画扇形（一个1/4的圆形的扇形），那么扇形的面积就是π/4。这样，利用概率的方式，“随机”往正方形里面放入一些“点”，根据这些点在扇形内的概率（在扇形内的点数/投的总点数）计算出π的值。
+Pi_scheduler.py文件如下：
 ```
 #!/usr/bin/env python2.7
 from __future__ import print_function
