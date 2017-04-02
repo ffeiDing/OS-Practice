@@ -147,109 +147,40 @@ docker network disconnect
 docker network inspect
 ```
 
-## 三、创建一个基础镜像为ubuntu的docker镜像，随后再其中加入nginx服务器，之后启动nginx服务器并利用tail命令将访问日志输出到标准输出流。要求该镜像中的web服务器主页显示自己编辑的内容，编辑的内容包含学号和姓名。之后创建一个自己定义的network，模式为bridge，并让自己配的web服务器容器连到这一网络中。要求容器所在宿主机可以访问这个web服务器搭的网站
-### 1、Master初始化过程
-mesos-1.1.0/src/master/master.cpp对Master进行了初始化，主要是通过<code>initialize()</code>初始化函数。初始化之前，相关命令行解析等工作前文已经提到，下面仅分析初始化函数。
-
-在<code>master::initialize()</code>初始化函数中：
-
-* 在进行一系列权限认证、权值设置等操作后，初始化Allocator
+## 三、创建一个基础镜像为ubuntu的docker镜像，随后在其中加入nginx服务器，之后启动nginx服务器并利用tail命令将访问日志输出到标准输出流。要求该镜像中的web服务器主页显示自己编辑的内容，编辑的内容包含学号和姓名。之后创建一个自己定义的network，模式为bridge，并让自己配的web服务器容器连到这一网络中。要求容器所在宿主机可以访问这个web服务器搭的网站
+### 1、创建一个基础镜像为ubuntu的docker镜像
+* 拉取镜像
 ```
-// Initialize the allocator.
- allocator->initialize(
-     flags.allocation_interval,
-     defer(self(), &Master::offer, lambda::_1, lambda::_2),
-     defer(self(), &Master::inverseOffer, lambda::_1, lambda::_2),
-     weights,
-     flags.fair_sharing_excluded_resource_names);
+sudo docker pull  ubuntu:latest
 ```
-* 时钟开始计时
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerpull指令运行截图.png"/></div> 
+* 创建并启动容器
 ```
-startTime = Clock::now();
+docker run -i -t --name unbuntu_docker -p 9999:80 ubuntu /bin/bash
 ```
-* 注册消息处理函数，伪码如下（对原代码做了整理，对几个重要的消息处理函数添加了注释）：
+### 2、加入nginx服务器
+* 在创建的容器中安装ngix
 ```
-install<SubmitSchedulerRequest>();
-install<RegisterFrameworkMessage>(); //Framework注册
-install<ReregisterFrameworkMessage>();
-install<UnregisterFrameworkMessage>();
-install<DeactivateFrameworkMessage>();
-install<ResourceRequestMessage>(); //Slave发送来资源的要求
-install<LaunchTasksMessage>(); //Framework发送来启动Task的消息
-install<ReviveOffersMessage>(); 
-install<KillTaskMessage>(); //Framework发送来终止Task的消息
-install<StatusUpdateAcknowledgementMessage>(); 
-install<FrameworkToExecutorMessage>();
-install<RegisterSlaveMessage>(); //Slave注册
-install<ReregisterSlaveMessage>();
-install<UnregisterSlaveMessage>();
-install<StatusUpdateMessage>(); //状态更新
-install<ExecutorToFrameworkMessage>();
-install<ReconcileTasksMessage>();
-install<ExitedExecutorMessage>();
-install<UpdateSlaveMessage>(); //Slave更新
-install<AuthenticateMessage>();
+apt update
+apt install nginx
 ```
-* 设置http路由
-* 开始竞争成为Leader，或者检测当前的Leader
+* 安装依赖包
 ```
- // Start contending to be a leading master and detecting the current
- // leader.
- contender->contend()
-   .onAny(defer(self(), &Master::contended, lambda::_1));
- detector->detect()
-   .onAny(defer(self(), &Master::detected, lambda::_1));
+apt install vim
 ```
-### 2、Slave初始化过程
-mesos-1.1.0/src/slave/slave.cpp对Slave进行了初始化，主要是通过<code>initialize()</code>初始化函数。初始化之前，相关命令行解析等工作前文已经提到，下面仅分析初始化函数。
-
-在<code>slave::initialize()</code>初始化函数中：
-
-* 与<code>master::initialize()</code>类似，在完成权限认证等一系列预备工作后，初始化资源预估器
+* 修改主页内容
 ```
-Try<Nothing> initialize =
-  resourceEstimator->initialize(defer(self(), &Self::usage));
+cd /var/www/html/
+vim index.nginx-debian.html
 ```
-* 确认slave工作目录存在
+* 启动nginx服务器
 ```
-// Ensure slave work directory exists.
-CHECK_SOME(os::mkdir(flags.work_dir))
-  << "Failed to create agent work directory '" << flags.work_dir << "'";
+cd ..
+cd ..
+cd ..
+nginx
 ```
-* 确认磁盘可达
-* 初始化attributes
-```
-Attributes attributes;
-  if (flags.attributes.isSome()) {
-    attributes = Attributes::parse(flags.attributes.get());
-  }
-```
-* 初始化hostname
-* 初始化statusUpdateManager
-```
-statusUpdateManager->initialize(defer(self(), &Slave::forward, lambda::_1)
-    .operator std::function<void(StatusUpdate)>());
-```
-* 注册消息处理函数，伪码如下（对原代码做了整理，对几个重要的消息处理函数添加了注释）：
-```
-install<SlaveRegisteredMessage>(); //Slave注册成功的消息
-install<SlaveReregisteredMessage>();
-install<RunTaskMessage>(); //运行一个Task的消息
-install<RunTaskGroupMessage>();
-install<KillTaskMessage>(); //停止运行一个Task的消息
-install<ShutdownExecutorMessage>();
-install<ShutdownFrameworkMessage>();
-install<FrameworkToExecutorMessage>();
-install<UpdateFrameworkMessage>();
-install<CheckpointResourcesMessage>();
-install<StatusUpdateAcknowledgementMessage>();
-install<RegisterExecutorMessage>(); //注册一个Executor的消息
-install<ReregisterExecutorMessage>();
-install<StatusUpdateMessage>(); //状态更新消息
-install<ExecutorToFrameworkMessage>();
-install<ShutdownMessage>();
-install<PingSlaveMessage>();
-```
+### 3、输出访问日志到标准输出流
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
