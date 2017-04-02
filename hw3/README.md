@@ -19,7 +19,10 @@ docker images [OPTIONS] [REPOSITORY]
 ```
 例子如下图：
 
-<div align=center><img width="60%" height="60%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos流程.png"/></div>
+<div align=center><img width="60%" height="60%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerimages指令运行截图.png"/></div>
+
+* 拉取镜像
+
 如上图所示，Framework运行在Mesos上，任务的调度和执行由Framework自己完成：
 
 * Slave1向Master汇报其有（4CPU，4GB RAM）的空闲资源。
