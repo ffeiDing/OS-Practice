@@ -5,7 +5,8 @@
 <div align=center><img width="50%" height="50%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/docker%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF%E6%88%AA%E5%9B%BE.png"/></div>
 
 ## 二、docker基本命令
-### 1、框架在Mesos上的运行过程
+### 1、镜像管理
+
 <div align=center><img width="60%" height="60%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos流程.png"/></div>
 如上图所示，Framework运行在Mesos上，任务的调度和执行由Framework自己完成：
 
@@ -17,9 +18,11 @@
 <div align=center><img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Spark%20框架图.png"/></div>
 以Spark on Mesos为例，根据Spark官方文档，从Spark的视角看，Mesos将Spark master替换为了cluster manager，Mesos决定任务的调度和执行。
 
-### 2、与传统操作系统上运行程序对比
+### 2、容器管理
 
 二者的差异性主要体现在资源分配方式上。Framework在Mesos上运行时，Master向Framework报告可用的资源，至于是否接收由Framework自己决定；而程序运行在传统操作系统上时，进程向内核申请资源，申请一般都会被满足。
+
+### 3、网络管理
 
 ## 三、Master和Slave的初始化过程
 ### 1、Master初始化过程
