@@ -17,7 +17,7 @@ docker images [OPTIONS] [REPOSITORY]
 --no-trunc=false                 不缩略输出          
 -q, --quiet=false                仅显示数字标识符
 ```
-例子：
+    例子：
 ```
 docker images
 ```
@@ -30,7 +30,7 @@ docker pull [OPTIONS] NAME[:TAG|@DIGEST]
 -a, --all-tags=false             拉取所有tagged镜像 
 --help=false                     打印使用帮助
 ```
-&nbsp;例子：
+例子：
 ```
 docker pull  ubuntu:latest
 docker pull  ubuntu:12.04
