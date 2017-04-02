@@ -122,24 +122,32 @@ docker logs con_name          获取容器名为con_name的容器日志
 ```
 
 ### 3、网络管理
+* 创建网络
+```
+docker network create
+```
+* 容器连接到网络
+```
+docker network connect
+```
+* 列出网络
+```
+docker network ls
+```
+* 删除网络
+```
+docker network rm
+```
+* 容器断开网络
+```
+docker network disconnect
+```
+* 网络信息
+```
+docker network inspect
+```
 
-如上图所示，Framework运行在Mesos上，任务的调度和执行由Framework自己完成：
-
-* Slave1向Master汇报其有（4CPU，4GB RAM）的空闲资源。
-* Master收到Slave1发来的消息后，调用分配模块，发送一个描述Slave1当前空闲资源的resource offer给Framework1。
-* Framework1的调度器回复Master，需要运行两个task在Slave1上，第一个task需要资源（2CPU, 1GB RAM），第二个task需要资源（1CPU, 2GB RAM）。
-* Master把任务需求资源发送给Slave1，Slave1分配适当的资源给Framework1的Executor，然后Executor开始执行这两个任务，因为Slave1还剩（1CPU，1GB RAM）的资源还未分配，分配模块可以将这些资源提供给Framwork2来使用。
-* Master把任务需求资源发送给Slave1，Slave1分配适当的资源给Framework1的Executor，然后Executor开始执行这两个任务，因为Slave1还剩（1CPU，1GB RAM）的资源还未分配，分配模块可以将这些资源提供给Framwork2来使用。
-<div align=center><img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Spark%20框架图.png"/></div>
-以Spark on Mesos为例，根据Spark官方文档，从Spark的视角看，Mesos将Spark master替换为了cluster manager，Mesos决定任务的调度和执行。
-
-### 2、容器管理
-
-二者的差异性主要体现在资源分配方式上。Framework在Mesos上运行时，Master向Framework报告可用的资源，至于是否接收由Framework自己决定；而程序运行在传统操作系统上时，进程向内核申请资源，申请一般都会被满足。
-
-### 3、网络管理
-
-## 三、Master和Slave的初始化过程
+## 三、创建一个基础镜像为ubuntu的docker镜像，随后再其中加入nginx服务器，之后启动nginx服务器并利用tail命令将访问日志输出到标准输出流。要求该镜像中的web服务器主页显示自己编辑的内容，编辑的内容包含学号和姓名。之后创建一个自己定义的network，模式为bridge，并让自己配的web服务器容器连到这一网络中。要求容器所在宿主机可以访问这个web服务器搭的网站
 ### 1、Master初始化过程
 mesos-1.1.0/src/master/master.cpp对Master进行了初始化，主要是通过<code>initialize()</code>初始化函数。初始化之前，相关命令行解析等工作前文已经提到，下面仅分析初始化函数。
 
