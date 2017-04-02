@@ -80,11 +80,48 @@ docker build [OPTIONS] PATH | URL | -
 --rm=true             Remove intermediate containers after a successful build
 -t, --tag=            Repository name (and optionally a tag) for the image(镜像名：标签)
 ```
->例子：
 
 ### 2、容器管理
+* 创建并启动容器
+```
+docker run [OPTIONS] IMAGE {COMMAND} [ARG...]
+参数:
+-d                            创建一个守护式容器在后台运行
+-i                            交互式运行
+-t                            为容器重新分配一个伪输入终端
+-p                            指定端口或IP进行映射
+--name="NAME"                 为容器指定一个名称
+--network="NETWORK_NAME"      选择一个网络
+```
+* 查看容器
+```
+docker ps [OPTIONS]
+参数:
+-a                            查看已经创建的容器
+-s                            查看已经启动的容器
+```
+* 启动容器
+```
+docker start con_name         启动容器名为con_name的容器
+```
+* 停止运行容器
+```
+docker stop con_name          停止容器名为con_name的容器
+```
+* 删除容器
+```
+docker rm con_name            删除容器名为con_name的容器
+```
+* 重命名容器
+```
+docker rename old_name new_name
+```
+* 容器信息
+```
+docker logs con_name          获取容器名为con_name的容器日志
+```
 
-
+### 3、网络管理
 
 如上图所示，Framework运行在Mesos上，任务的调度和执行由Framework自己完成：
 
