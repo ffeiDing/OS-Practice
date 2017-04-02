@@ -17,7 +17,8 @@ docker images [OPTIONS] [REPOSITORY]
 --no-trunc=false                 不缩略输出          
 -q, --quiet=false                仅显示数字标识符
 ```
-    例子：
+
+例子：
 ```
 docker images
 ```
