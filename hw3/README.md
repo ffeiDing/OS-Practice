@@ -7,7 +7,7 @@
 ## 二、docker基本命令
 ### 1、镜像管理
 * 列出镜像 
->```
+```
 docker images [OPTIONS] [REPOSITORY]
 参数:
 -a, --all=false                  列出所有镜像（默认隐藏中间镜像）
@@ -18,13 +18,14 @@ docker images [OPTIONS] [REPOSITORY]
 -q, --quiet=false                仅显示数字标识符
 ```
 
->例子：
+例子：
 ```
 docker images
 ```
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerimages指令运行截图.png"/></div>
 
-* 拉取镜像
+  
+  * 拉取镜像
 ```
 docker pull [OPTIONS] NAME[:TAG|@DIGEST]
 参数:
