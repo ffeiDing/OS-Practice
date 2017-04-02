@@ -7,7 +7,7 @@
 ## 二、docker基本命令
 ### 1、镜像管理
 * 列出镜像 
-```
+>```
 docker images [OPTIONS] [REPOSITORY]
 参数:
 -a, --all=false                  列出所有镜像（默认隐藏中间镜像）
