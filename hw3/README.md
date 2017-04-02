@@ -228,8 +228,9 @@ docker network create hw_network
 docker network connect hw_network hw_docker
 docker network inspect hw_network
 ```
-下图表明成功连入
-<div align=left><img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/访问日志.png"/></div>
+下图表示成功连入
+
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/网络信息.png"/></div>
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
