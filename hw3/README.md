@@ -35,6 +35,25 @@ docker pull [OPTIONS] NAME[:TAG|@DIGEST]
 docker pull  ubuntu:latest
 docker pull  ubuntu:12.04
 ```
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerpull指令运行截图.png"/></div> 
+
+* 查找镜像
+```
+docker search [OPTIONS] TERM/NAME
+参数:
+--automated=false             仅显示自动化的builds
+--help=false                  打印使用帮助
+--no-trunc=false              不缩略输出 
+-s, --stars=0                 只显示至少x颗星的信息（在该情况下为至少0颗星）
+```
+>例子：
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerpull指令运行截图.png"/></div> 
+
+
+
+
+
+
 
 
 
