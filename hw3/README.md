@@ -4,7 +4,7 @@
 安装成功后，docker服务端和docker客户端版本信息如下图：
 <div align=center><img width="50%" height="50%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/docker%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF%E6%88%AA%E5%9B%BE.png"/></div>
 
-## 二、框架在Mesos上的运行过程与在传统操作系统上运行程序对比
+## 二、docker基本命令
 ### 1、框架在Mesos上的运行过程
 <div align=center><img width="60%" height="60%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos流程.png"/></div>
 如上图所示，Framework运行在Mesos上，任务的调度和执行由Framework自己完成：
