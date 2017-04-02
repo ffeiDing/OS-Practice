@@ -180,7 +180,7 @@ vim index.nginx-debian.html
 
 登录燕云，添加内部9999端口至外部9999端口的转发
 
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerpull指令运行截图.png"/></div> 
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/添加端口.png"/></div> 
 
 * 启动nginx服务器
 ```
@@ -191,7 +191,7 @@ nginx
 ```
 * 浏览器访问<code> http://162.105.174.40:9999 </code>查看主页内容
 
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerpull指令运行截图.png"/></div>
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/web主页内容.png"/></div>
 
 ### 3、输出访问日志到标准输出流
 ```
