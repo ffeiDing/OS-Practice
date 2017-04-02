@@ -17,11 +17,11 @@ docker images [OPTIONS] [REPOSITORY]
 --no-trunc=false                 不缩略输出          
 -q, --quiet=false                仅显示数字标识符
 ```
-例子：
+  例子：
 ```
 docker images
 ```
-<div align=leftr><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerimages指令运行截图.png"/></div>
+<div align=top><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerimages指令运行截图.png"/></div>
 
 * 拉取镜像
 ```
