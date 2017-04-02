@@ -2,33 +2,7 @@
 ## 一、安装配置Docker
 
 安装成功后，docker服务端和docker客户端版本信息如下图：
-<div align=center><img width="75%" height="75%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos%E6%A1%86%E6%9E%B6%E5%9B%BE.png"/></div>
-如上图所示，Mesos主要组件有：
-
-* Zookeeper：选举出Mesos master。
-* Mesos master：接收Mesos slave和Framework scheduler的注册，分配资源。
-* Standby master：作为备用Master，与Master节点运行在同一集群中。在Leader宕机后Zookeeper可以很快地从其中选举出新的Leader，恢复状态。
-* Mesos slave：接收Mesos master发来的Task，调度Framework executor去执行。
-* Framework：例如Spark，Hadoop等，包括Scheduler和Executor两部分。Scheduler启动后注册到Master，决定是否接收Master发送来的Resource offer消息，并反馈给Master。Executor由Slave调用，执行Framework的Task。
-* Task：Task由Slave调度Exexutor执行，可以是长生命周期的，也可以是短生命周期的。
-
-### 2、源码中具体位置
-
-* Zookeeper：位于mesos-1.1.0/src/zookeeper文件夹中，其中detector.cpp用来检测当前的Leader，contender.cpp用来进行Leader的竞争。
-* Master：位于mesos-1.1.0/src/master文件夹中，其中的main.cpp是入口程序，封装了Google的gflags来解析命令行参数和环境变量。在Master的初始化过程中，首先初始化Allocator，默认的Allocator是内置的Hierarchical Dominant Resource Fairness allocator。然后监听消息，注册处理函数，当收到消息时调用相应的函数。最后竞争（默认Zookeeper)成为Master中的Leader，或者检测当前的Leader。
-* Slave：位于mesos-1.1.0/src/slave文件夹中，其中的main.cpp是入口程序，封装了Google的flags来解析命令行参数和环境变量。在slave.cpp中，首先初始化资源预估器、初始化attributes、初始化hostname。然后注册一系列处理函数，当收到消息时调用相应的函数。
-* Test Framework：位于mesos-1.1.0/src/examples/test_framework.cpp中，在main函数中，首先指定Executor的uri，配置Executor的信息，创建Scheduler。
-* Test Scheduler：位于mesos-1.1.0/src/scheduler文件夹中，其中，运行MesosSchedulerDriver的代码在mesos-1.1.0/src/sched/sched.cpp中，首先检测Leader，创建一个线程，然后注册消息处理函数，最终调用了Test Framework的resourceOffers函数，根据得到的offers，创建一系列Tasks，然后调用driver的launchTasks函数，最终向Leader发送launchTasks的消息。
-* Test Executor：位于mesos-1.1.0/src/examples/test_executor.cpp中，运行MesosExecutorDriver和Slave进行通信。MesosExecutorDriver的实现在mesos-1.1.0/src/exec/exec.cpp中，类似MesosSchedulerDriver，它创建了一个线程，处理相应的消息。
-
-### 3、工作流程
-
-* 集群中的所有Slave节点会和Master定期进行通信，将自己的资源信息同步到Master，Master由此获知到整个集群的资源状况。
-* Master会和已注册、受信任的Framework进行交互，定期将最新的资源情况发送给Framework，当Framework前端有工作需求时，将选择接收资源，否则拒绝。
-* 前端用户提交了一个工作需求给Framework。
-* Framework接收Master发过来的资源信息。
-* Framework依据资源信息向Slave发起任务启动命令，开始调度工作。
-
+<div align=center><img width="75%" height="75%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/docker%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF%E6%88%AA%E5%9B%BE.png"/></div>
 
 ## 二、框架在Mesos上的运行过程与在传统操作系统上运行程序对比
 ### 1、框架在Mesos上的运行过程
