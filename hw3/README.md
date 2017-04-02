@@ -22,10 +22,9 @@ docker images [OPTIONS] [REPOSITORY]
 ```
 docker images
 ```
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerimages指令运行截图.png"/></div>
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerimages指令运行截图.png"/></div>  
 
-  
-  * 拉取镜像
+* 拉取镜像
 ```
 docker pull [OPTIONS] NAME[:TAG|@DIGEST]
 参数:
