@@ -204,6 +204,7 @@ tail -f /var/log/nginx/access.log
 ### 3、创建自定义网络
 
 * 停止容器
+
 Ctrl C 后退回到容器
 ```
 exit
