@@ -6,7 +6,7 @@
 
 ## 二、docker基本命令
 ### 1、镜像管理
-* 列出镜像
+* 列出镜像    
 ```
 docker images [OPTIONS] [REPOSITORY]
 参数:
