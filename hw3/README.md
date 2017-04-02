@@ -193,13 +193,15 @@ nginx
 
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/web主页内容.png"/></div>
 
-### 3、输出访问日志到标准输出流
+* 输出访问日志到标准输出流
 ```
 tail -f /var/log/nginx/access.log
 ```
 结果如下图：
 
 <div align=left><img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/访问日志.png"/></div>
+
+### 3、创建自定义网络
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
