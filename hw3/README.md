@@ -47,7 +47,7 @@ docker search [OPTIONS] TERM/NAME
 -s, --stars=0                 只显示至少x颗星的信息（在该情况下为至少0颗星）
 ```
 >例子：
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerpull指令运行截图.png"/></div> 
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockersearch指令运行截图.png"/></div> 
 
 
 
