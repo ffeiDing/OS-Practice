@@ -82,6 +82,7 @@ docker build [OPTIONS] PATH | URL | -
 ```
 
 ### 2、容器管理
+
 * 创建并启动容器
 ```
 docker run [OPTIONS] IMAGE {COMMAND} [ARG...]
@@ -154,11 +155,13 @@ docker network inspect
 sudo docker pull  ubuntu:latest
 ```
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerpull指令运行截图.png"/></div> 
+
 * 创建并启动容器
 ```
 docker run -i -t --name unbuntu_docker -p 9999:80 ubuntu /bin/bash
 ```
 ### 2、加入nginx服务器
+
 * 在创建的容器中安装ngix
 ```
 apt update
