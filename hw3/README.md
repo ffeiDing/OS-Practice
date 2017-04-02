@@ -211,7 +211,25 @@ exit
 ```
 停止该容器
 
-
+* 保存镜像
+```
+docker commit ubuntu_docker ubuntu_docker2
+```
+* 创建并运行带新镜像的容器
+```
+docker run -d --name hw_docker -p 9999:80 ubuntu_docker2 nginx -g 'daemon off;'
+```
+* 创建一个自己定义的network，模式为bridge
+```
+docker network create hw_network
+```
+* 将容器连入网络并检查
+```
+docker network connect hw_network hw_docker
+docker network inspect hw_network
+```
+下图表明成功连入
+<div align=left><img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/访问日志.png"/></div>
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
