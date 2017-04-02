@@ -6,6 +6,18 @@
 
 ## 二、docker基本命令
 ### 1、镜像管理
+* 列出镜像
+```
+docker images [OPTIONS] [REPOSITORY]
+参数：
+-a, --all=false                  列出所有镜像（默认隐藏中间镜像）
+--digests=falseShow digests      摘要
+-f, --filter=[]                  根据条件过滤输出
+--help=false                     打印使用帮助
+--no-trunc=false                 不缩略输出          
+-q, --quiet=false                仅显示数字标识符
+```
+例子如下图：
 
 <div align=center><img width="60%" height="60%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw2/Mesos流程.png"/></div>
 如上图所示，Framework运行在Mesos上，任务的调度和执行由Framework自己完成：
