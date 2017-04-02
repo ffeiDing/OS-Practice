@@ -245,7 +245,7 @@ ip地址为172.17.0.2
 ```
 curl 172.17.0.2:80
 ```
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/网络信息.png"/></div>
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/访问web服务器搭的网站.png"/></div>
 
 
 
