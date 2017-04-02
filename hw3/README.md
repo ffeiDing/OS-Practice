@@ -2,7 +2,7 @@
 ## 一、安装配置Docker
 
 安装成功后，docker服务端和docker客户端版本信息如下图：
-<div align=left><img width="50%" height="50%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/docker%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF%E6%88%AA%E5%9B%BE.png"/></div>
+<div align=left><img width="50%" height="50%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/docker版本信息截图.png"/></div>
 
 ## 二、docker基本命令
 ### 1、镜像管理
