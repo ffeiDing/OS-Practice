@@ -302,6 +302,20 @@ docker run -i -t --net="host" mysql:latest /bin/bash
 * 容器一旦加入host模式的网络，就无法通过网络管理指令来断开或连接网络
 
 ### 4、overlay模式
+```
+docker network create -d overlay overlay_network
+```
+
+overlay模式的网络需要手动创建，区别于以上三种模式，它主要用于对集群的管理和服务（假设有三台主机）：
+
+* 第一台主机作为swarn管理节点
+```
+docker swarm init
+```
+
+截图如下：
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/bridge模式网络.png"/></div>
+
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
