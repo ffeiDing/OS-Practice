@@ -349,6 +349,11 @@ docker service create --replicas 3 --network overlay_network --name overlay_web 
 * 浏览器访问<code>http://162.105.174.40:8888</code>
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay访问web.png"/></div>
 
+## 五、阅读mesos中负责与docker交互的代码
+
+
+
+
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
 * Mesos默认的资源调度算法是DRF（主导资源公平算法 Dominant Resource Fairness），它是一种支持多资源的最大-最小公平分配机制。类似网络拥塞时带宽的分配，在公平的基础上，尽可能满足更大的需求。但Mesos更为复杂一些，因为有主导资源（支配性资源）的存在。比如假设系统中有9个CPU，18GB RAM，A用户请求的资源为（1 CPU, 4 GB），B用户请求的资源为（3 CPU， 1 GB），那么A的支配性资源为内存（CPU占比1/9，内存占比4/18），B的支配性资源为CPU（CPU占比3/9，内存占比1/18）。
