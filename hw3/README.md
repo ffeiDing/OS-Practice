@@ -336,7 +336,7 @@ docker node ls
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay节点.png"/></div>
 
 * 每台主机都可以通过<code>docker network ls</code>指令看到overlay模式的网络
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay节点.png"/></div>
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay模式网络.png"/></div>
 
 * 输入<code>docker network create -d overlay overlay_network</code>指令手动创建overlay网络
 
@@ -347,7 +347,7 @@ docker service create --replicas 3 --network overlay_network --name overlay_web 
 * 登录燕云，添加管理容器所在的主机8888端口至宿主机8888端口的端口转发
 
 * 浏览器访问<code>http://162.105.174.40:8888</code>
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay节点.png"/></div>
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay访问web.png"/></div>
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
