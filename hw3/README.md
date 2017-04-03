@@ -276,13 +276,32 @@ docker run -i -t --net="bridge" mysql:latest /bin/bash
 
 * Docker Daemon将veth0附加到Docker Daemon创建的docker0网桥上，保证宿主机的网络报文可以发往veth0
 
-* Docker Daemon将veth1添加到Docker Container所属的<code>namespace</code>下，并被改名为eth0。
+* Docker Daemon将veth1添加到容器所属的<code>namespace</code>下，并被改名为eth0。
 
-* 宿主机的网络报文若发往veth0，则立即会被eth0接收，实现宿主机到Docker Container网络的联通性；同时，也保证Docker Container单独使用eth0，实现容器网络环境的隔离性
+* 宿主机的网络报文若发往veth0，则立即会被eth0接收，实现宿主机到容器网络的联通性；同时，也保证Docker Container单独使用eth0，实现容器网络环境的隔离性
+
+* bridge模式的网络可以创建多个
 
 * 容器可以通过网络管理指令来断开bridge模式下的网络或连接其他网络
 
 ### 3、host模式
+```
+docker run -i -t --net="host" mysql:latest /bin/bash
+```
+
+该模式区别于bridge模式，在无需进行NAT转换的同时，隔离性弱化了：
+
+* 容器不需要通过桥接模式，可以直接访问宿主机上的全部网络信息，不会有所属的<code>namespace</code>，而是共享宿主机的<code>namespace</code>
+
+* 容器内部将不再拥有所有的端口资源，原因是部分端口资源已经被宿主机本身的服务占用，还有部分端口已经用以bridge网络模式容器的端口映射
+
+* 如果两个以上的容器都加入host模式的网络，就无法监听同一端口，会发生访问冲突
+
+* host模式的网络只可以创建一个
+
+* 容器一旦加入host模式的网络，就无法通过网络管理指令来断开或连接网络
+
+### 4、overlay模式
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
