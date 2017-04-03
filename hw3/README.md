@@ -249,6 +249,13 @@ curl 172.17.0.2:80
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/访问web服务器搭的网站.png"/></div>
 
 ## 四、docker容器加入不同的网络模式
+### 1、null模式
+```
+docker run -i -t --net="none"  mysql:latest /bin/bash
+```
+
+输入以上指令进入容器后，再输入<code>ip addr</code>后，查看网络信息
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/访问web服务器搭的网站.png"/></div>
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
