@@ -254,7 +254,7 @@ curl 172.17.0.2:80
 docker run -i -t --net="none"  mysql:latest /bin/bash
 ```
 
-输入以上指令进入容器后，再输入<code>ip addr</code>后，查看网络信息
+输入以上指令进入容器后，再输入<code>ip addr</code>，查看网络信息
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/null模式网络.png"/></div>
 
 * 容器仅有一个本地回环网络<code>127.0.0.1</code>，没有任何网络配置
@@ -262,9 +262,13 @@ docker run -i -t --net="none"  mysql:latest /bin/bash
 * 容器不能通过网络管理指令来断开null模式下的网络
 
 ### 2、bridge模式
+```
+docker run -i -t mysql:latest /bin/bash
+docker run -i -t --net="bridge" mysql:latest /bin/bash
+```
 
-
-
+以上两个指令都可以创建bridge模式的网络下的容器，即默认情况下容器的网络配置为bridge模式，进入容器后，再输入<code>ip addr</code>，查看网络信息
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/null模式网络.png"/></div>
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
