@@ -268,7 +268,21 @@ docker run -i -t --net="bridge" mysql:latest /bin/bash
 ```
 
 以上两个指令都可以创建bridge模式的网络下的容器，即默认情况下容器的网络配置为bridge模式，进入容器后，再输入<code>ip addr</code>，查看网络信息
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/null模式网络.png"/></div>
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/bridge模式网络.png"/></div>
+
+从上图中可以看到，容器内有一个eth0接口，解释eth0需要理解bridge桥接模式：
+
+* Docker Daemon利用veth pair技术，在宿主机上创建两个虚拟网络接口设备，假设为veth0和veth1。veth pair技术的特性可以保证无论哪一个veth接收到网络报文，都会将报文传输给另一方
+
+* Docker Daemon将veth0附加到Docker Daemon创建的docker0网桥上，保证宿主机的网络报文可以发往veth0
+
+* Docker Daemon将veth1添加到Docker Container所属的<code>namespace</code>下，并被改名为eth0。
+
+* 宿主机的网络报文若发往veth0，则立即会被eth0接收，实现宿主机到Docker Container网络的联通性；同时，也保证Docker Container单独使用eth0，实现容器网络环境的隔离性
+
+* 容器可以通过网络管理指令来断开bridge模式下的网络或连接其他网络
+
+### 3、host模式
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
