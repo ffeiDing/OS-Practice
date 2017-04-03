@@ -327,13 +327,27 @@ root@oo-lab:/home/pkusei# docker swarm join \
 
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay模式普通节点.png"/></div>
 
-* 第一台主机查看所有节点
+* 第一台主机（管理节点）查看所有节点
 ```
 docker node ls
 ```
 截图如下：
 
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay模式普通节点.png"/></div>
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay节点.png"/></div>
+
+* 每台主机都可以通过<code>docker network ls</code>指令看到overlay模式的网络
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay节点.png"/></div>
+
+* 输入<code>docker network create -d overlay overlay_network</code>指令手动创建overlay网络
+
+* 采用如下指令创建容器，此时不能创建普通容器，需要创建一个docker server用于集群，并创建三个task，将管理容器中的80端口映射到宿主机的8888端口
+```
+docker service create --replicas 3 --network overlay_network --name overlay_web -p 8888:80 nginx
+```
+* 登录燕云，添加管理容器所在的主机8888端口至宿主机8888端口的端口转发
+
+* 浏览器访问<code>http://162.105.174.40:8888</code>
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay节点.png"/></div>
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
