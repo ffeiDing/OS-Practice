@@ -314,7 +314,7 @@ docker swarm init
 ```
 
 截图如下：
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/bridge模式网络.png"/></div>
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay模式管理节点.png"/></div>
 
 
 ## 四、Mesos资源调度算法
