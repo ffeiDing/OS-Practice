@@ -314,6 +314,7 @@ docker swarm init
 ```
 
 截图如下：
+
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay模式管理节点.png"/></div>
 
 * 第二台和第三台主机作为普通节点加入
@@ -323,7 +324,16 @@ root@oo-lab:/home/pkusei# docker swarm join \
 > 172.16.6.213:2377
 ```
 截图如下：
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay模式管理节点.png"/></div>
+
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay模式普通节点.png"/></div>
+
+* 第一台主机查看所有节点
+```
+docker node ls
+```
+截图如下：
+
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/overlay模式普通节点.png"/></div>
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
