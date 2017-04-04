@@ -443,9 +443,13 @@ Try<Subprocess> s = subprocess(
 
 ## 五、写一个framework，以容器的方式运行task
 ```
-./bin/mesos-agent.sh --master=172.16.6.224:5050 --work_dir=/var/lib/mesos \
---ip=172.16.6.213 --hostname=162.105.174.40 --containerizers=docker,mesos \
+./bin/mesos-agent.sh --master=172.16.6.213:5050 --work_dir=/var/lib/mesos \
+--ip=172.16.6.224 --hostname=162.105.174.40 --containerizers=docker,mesos \
 --image_providers=docker --isolation=docker/runtime
+
+./bin/mesos-master.sh --ip=172.16.6.213 --hostname=162.105.174.40 --work_dir=/var/lib/mesos
+
+python DockerScheduler.py 172.16.6.213 &
 ```
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
