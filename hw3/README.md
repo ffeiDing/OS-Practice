@@ -442,8 +442,11 @@ Try<Subprocess> s = subprocess(
 该文件负责解析JSON格式的配置文件，解析为map类。
 
 ## 五、写一个framework，以容器的方式运行task
-
-
+```
+./bin/mesos-agent.sh --master=172.16.6.213:5050 --work_dir=/var/lib/mesos \
+--ip=172.16.6.213 --hostname=162.105.174.40 --containerizers=docker,mesos \
+--image_providers=docker --isolation=docker/runtime
+```
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
 * Mesos默认的资源调度算法是DRF（主导资源公平算法 Dominant Resource Fairness），它是一种支持多资源的最大-最小公平分配机制。类似网络拥塞时带宽的分配，在公平的基础上，尽可能满足更大的需求。但Mesos更为复杂一些，因为有主导资源（支配性资源）的存在。比如假设系统中有9个CPU，18GB RAM，A用户请求的资源为（1 CPU, 4 GB），B用户请求的资源为（3 CPU， 1 GB），那么A的支配性资源为内存（CPU占比1/9，内存占比4/18），B的支配性资源为CPU（CPU占比3/9，内存占比1/18）。
