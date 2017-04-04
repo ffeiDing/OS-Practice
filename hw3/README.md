@@ -355,28 +355,84 @@ docker service create --replicas 3 --network overlay_network --name overlay_web 
 
 ### 1、 <code>docker.cpp</code>、<code>docker.hpp</code>
 
-* <code>docker.hpp</code>头文件中定义了Docker类，该类内部又定义了Container（容器）和Image（镜像）两个类。
+ <code>docker.hpp</code>头文件中定义了Docker类，该类内部又定义了Container（容器）和Image（镜像）两个类。<code>docker.cpp</code>文件实现了Docker类中的成员函数，主要负责将参数与docker指令一一对应。比较重要的函数有<code>create</code>：创建容器或者创建镜像，<code>run</code>：运行docker，<code>stop</code>：停止运行docker，<code>kill</code>：杀死docker，<code>rm</code>：删除docker等等，其中<code>run</code>具体实现如下：
 
-* <code>docker.cpp</code>文件实现了Docker类中的成员函数，主要负责将参数与docker指令一一对应。比较重要的函数有：
-
-<code>create</code>：创建容器或者创建镜像
-
-<code>run</code>：运行docker，具体实现如下：
-
-首先获取docker的信息
+* 首先获取docker的信息
 ```
 const ContainerInfo::DockerInfo& dockerInfo = containerInfo.docker();
 ```
 
+* 添加路径、-H选项、socket参数和run命令
+```
+vector<string> argv;
+argv.push_back(path);
+argv.push_back("-H");
+argv.push_back(socket);
+argv.push_back("run");
+```
+
+* 检查是否有特权，如果有添加--privileged参数
+```
+if (dockerInfo.privileged()) {
+    argv.push_back("--privileged");
+}
+```
+
+* 检查资源分配情况，添加--cpu-shares、--memory参数
+
+* 检查环境变量，添加环境变量参数
+```
+if (env.isSome()) {
+    foreachpair (string key, string value, env.get()) {
+    argv.push_back("-e");
+    argv.push_back(key + "=" + value);
+    }
+}
+```
+
+* 检查并添加commandInfo中的环境变量参数
 
 
+* 手动添加MESOS_SANDBOX和MESOS_CONTAINER_NAME环境变量参数
+```
+argv.push_back("-e");
+argv.push_back("MESOS_SANDBOX=" + mappedDirectory);
+argv.push_back("-e");
+argv.push_back("MESOS_CONTAINER_NAME=" + name);
+```
 
+* 配置volume
 
+* 配置网络（host、bridge、none模式和用户自定义模式），并检查相关模式下的配置是否有错误，比如host和none模式下不能进行端口映射等
 
+* 检查并添加外部设备参数
 
+* 如果shell被激活，重写entrypoint
+```
+if (commandInfo.shell()) {
+    argv.push_back("--entrypoint");
+    argv.push_back("/bin/sh");
+}
+```
 
+* 添加容器名和镜像名
+```
+argv.push_back("--name");
+argv.push_back(name);
+argv.push_back(image);
+```
 
-
+* 创建子进程运行容器
+```
+Try<Subprocess> s = subprocess(
+    path,
+    argv,
+    Subprocess::PATH("/dev/null"),
+    _stdout,
+    _stderr,
+    nullptr,
+    environment);
+```
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
