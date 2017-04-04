@@ -355,7 +355,7 @@ docker service create --replicas 3 --network overlay_network --name overlay_web 
 
 ### 1、 <code>docker.cpp</code>、<code>docker.hpp</code>
 
- <code>docker.hpp</code>头文件中定义了Docker类，该类内部又定义了Container（容器）和Image（镜像）两个类。<code>docker.cpp</code>文件实现了Docker类中的成员函数，主要负责将参数与docker指令一一对应。比较重要的函数有<code>create</code>：创建容器或者创建镜像，<code>run</code>：运行docker，<code>stop</code>：停止运行docker，<code>kill</code>：杀死docker，<code>rm</code>：删除docker等等，其中<code>run</code>具体实现如下：
+ <code>docker.hpp</code>头文件中定义了Docker类，该类内部又定义了Container（容器）和Image（镜像）两个类。<code>docker.cpp</code>文件实现了Docker类中的成员函数，主要负责将参数与docker指令一一对应。比较重要的函数有<code>create</code>：创建容器或者创建镜像，<code>run</code>：运行docker，<code>stop</code>：停止运行docker，<code>kill</code>：杀死docker，<code>rm</code>：删除docker等等，其中<code>run</code>函数具体实现如下：
 
 * 首先获取docker的信息
 ```
@@ -433,6 +433,16 @@ Try<Subprocess> s = subprocess(
     nullptr,
     environment);
 ```
+
+### 2、<code>executor.cpp</code>、<code>executor.hpp</code>
+
+该部分实现了一个执行docker的executor，将docker作为一个task，对它进行注册、启动、运行、终止等基本操作。
+
+### 3、<code>spec.cpp</code>
+该文件负责解析JSON格式的配置文件，解析为map类。
+
+## 五、写一个framework，以容器的方式运行task
+
 
 ## 四、Mesos资源调度算法
 ### 1、我对DRF算法的理解
