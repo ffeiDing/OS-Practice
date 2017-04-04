@@ -443,7 +443,7 @@ Try<Subprocess> s = subprocess(
 
 ## 五、写一个framework，以容器的方式运行task
 ```
-./bin/mesos-agent.sh --master=172.16.6.213:5050 --work_dir=/var/lib/mesos \
+./bin/mesos-agent.sh --master=172.16.6.224:5050 --work_dir=/var/lib/mesos \
 --ip=172.16.6.213 --hostname=162.105.174.40 --containerizers=docker,mesos \
 --image_providers=docker --isolation=docker/runtime
 ```
