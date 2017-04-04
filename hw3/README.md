@@ -442,29 +442,149 @@ Try<Subprocess> s = subprocess(
 该文件负责解析JSON格式的配置文件，解析为map类。
 
 ## 五、写一个framework，以容器的方式运行task
+
+和上次作业的最后一题类似，需要修改pymesos的样例，修改后如下：
+```
+#!/usr/bin/env python2.7
+from __future__ import print_function
+
+import sys
+import uuid
+import time
+import socket
+import signal
+import getpass
+from threading import Thread
+from os.path import abspath, join, dirname
+
+from pymesos import MesosSchedulerDriver, Scheduler, encode_data, decode_data
+from addict import Dict
+
+TASK_CPU = 1
+TASK_MEM = 32
+EXECUTOR_CPUS = 0.5
+EXECUTOR_MEM = 32
+TASK_NUM = 1
+
+
+class DockerScheduler(Scheduler):
+
+    def __init__(self):
+        self.launched_task = 0
+
+    def resourceOffers(self, driver, offers):
+        filters = {'refuse_seconds': 5}
+
+        for offer in offers:
+            cpus = self.getResource(offer.resources, 'cpus')
+            mem = self.getResource(offer.resources, 'mem')
+            if self.launched_task == TASK_NUM:
+                return
+            if cpus < TASK_CPU or mem < TASK_MEM:
+                continue
+
+
+            task = Dict()
+            task_id = str(uuid.uuid4())
+            task.task_id.value = task_id
+            task.agent_id.value = offer.agent_id.value
+
+            # Container Info
+            task.name = 'docker'
+            task.container.type = 'DOCKER'
+            task.container.docker.image = 'ubuntu_docker2'
+            task.container.docker.network = 'HOST'
+
+            # Command Info
+            task.command.shell = False
+            task.command.value = 'nginx'
+            task.command.arguments=['-g','daemon off;']
+
+            task.resources = [
+                dict(name='cpus', type='SCALAR', scalar={'value': TASK_CPU}),
+                dict(name='mem', type='SCALAR', scalar={'value': TASK_MEM}),
+            ]
+
+            self.launched_task += 1
+            driver.launchTasks(offer.id, [task], filters)
+            
+
+    def getResource(self, res, name):
+        for r in res:
+            if r.name == name:
+                return r.scalar.value
+        return 0.0
+
+    def statusUpdate(self, driver, update):
+        logging.debug('Status update TID %s %s',
+                      update.task_id.value,
+                      update.state)
+
+
+def main(master):
+    framework = Dict()
+    framework.user = getpass.getuser()
+    framework.name = "DockerFramework"
+    framework.hostname = socket.gethostname()
+
+    driver = MesosSchedulerDriver(
+        DockerScheduler(),
+        framework,
+        master,
+        use_addict=True,
+    )
+
+    def signal_handler(signal, frame):
+        driver.stop()
+
+    def run_driver_thread():
+        driver.run()
+
+    driver_thread = Thread(target=run_driver_thread, args=())
+    driver_thread.start()
+
+    print('Scheduler running, wait :).')
+    signal.signal(signal.SIGINT, signal_handler)
+
+    while driver_thread.is_alive():
+        time.sleep(1)
+
+
+if __name__ == '__main__':
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+    if len(sys.argv) != 2:
+        print("Usage: {} <mesos_master>".format(sys.argv[0]))
+        sys.exit(1)
+    else:
+        main(sys.argv[1])
+```
+与样例的主要区别：
+```
+# Container Info
+task.name = 'docker'
+task.container.type = 'DOCKER'
+task.container.docker.image = 'ubuntu_docker2'
+task.container.docker.network = 'HOST'
+
+# Command Info
+task.command.shell = False
+task.command.value = 'nginx'
+task.command.arguments=['-g','daemon off;']
+```
+添加了容器和命令行的信息
+
+启动master
+```
+./bin/mesos-master.sh --ip=172.16.6.213 --hostname=162.105.174.40 --work_dir=/var/lib/mesos
+```
+启动slave
 ```
 ./bin/mesos-agent.sh --master=172.16.6.213:5050 --work_dir=/var/lib/mesos \
 --ip=172.16.6.224 --hostname=162.105.174.40 --containerizers=docker,mesos \
 --image_providers=docker --isolation=docker/runtime
-
-./bin/mesos-master.sh --ip=172.16.6.213 --hostname=162.105.174.40 --work_dir=/var/lib/mesos
-
+```
+运行调度器
+```
 python DockerScheduler.py 172.16.6.213 &
 ```
-## 四、Mesos资源调度算法
-### 1、我对DRF算法的理解
-* Mesos默认的资源调度算法是DRF（主导资源公平算法 Dominant Resource Fairness），它是一种支持多资源的最大-最小公平分配机制。类似网络拥塞时带宽的分配，在公平的基础上，尽可能满足更大的需求。但Mesos更为复杂一些，因为有主导资源（支配性资源）的存在。比如假设系统中有9个CPU，18GB RAM，A用户请求的资源为（1 CPU, 4 GB），B用户请求的资源为（3 CPU， 1 GB），那么A的支配性资源为内存（CPU占比1/9，内存占比4/18），B的支配性资源为CPU（CPU占比3/9，内存占比1/18）。
-* DRF算法的目标是使每个用户获得相同比例的支配性资源，给A用户（3 CPU，12 GB），B用户（6 CPU，2 GB），这样A获得了2/3的内存资源，B获得了2/3的CPU资源。
-* DRF鼓励用户去共享资源，如果资源是在用户之间被平均地切分，会保证没有用户会拿到更多资源。
-* DRF是strategy-proof，即用户不能通过欺骗来获取更多地资源分配。
-* DRF是envy-free（非嫉妒）的，没有一个用户会与其他用户交换资源分配。
-* DRF分配是Pareto efficient，即不可能通过减少一个用户的资源分配来提升另一个用户的资源分配。
-### 2、在源码中的位置
-DRF算法的源码位于mesos-1.1.0/src/master/allocator/sorter/drf文件夹中，其中的sorter.cpp用来对framework进行排序、add、remove、update等操作。mesos-1.1.0/src/master/allocator/mesos/hierarchical.cpp文件是分层分配器，它调用了sorter.cpp和sorter.hpp进行功能上的具体实现。
-
-## 五、写一个完成简单工作的框架
-
-使用python语言，扩展了豆瓣的pymesos/examples文件夹下的scheduler.py和executor.py，使用蒙特卡洛法计算π的值。
-
-蒙特卡洛算法是通过概率来计算π的值的。对于一个单位为1的正方形，以其某一个顶点为圆心，边为半径在正方形内画扇形（一个1/4的圆形的扇形），那么扇形的面积就是π/4。这样，利用概率的方式，“随机”往正方形里面放入一些“点”，根据这些点在扇形内的概率（在扇形内的点数/投的总点数）计算出π的值。
-
