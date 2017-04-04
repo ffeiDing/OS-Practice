@@ -351,6 +351,30 @@ docker service create --replicas 3 --network overlay_network --name overlay_web 
 
 ## 五、阅读mesos中负责与docker交互的代码
 
+代码位于<code>mesos-1.1.0/src/docker</code>文件夹中，有<code>docker.cpp</code>、<code>docker.hpp</code>、<code>executor.cpp</code>、<code>executor.hpp</code>和<code>spec.cpp<code>五个文件。
+
+### 1、 <code>docker.cpp</code>、<code>docker.hpp</code>
+
+* <code>docker.hpp</code>头文件中定义了Docker类，该类内部又定义了Container（容器）和Image（镜像）两个类。
+
+* <code>docker.cpp</code>文件实现了Docker类中的成员函数，主要负责将参数与docker指令一一对应。比较重要的函数有：
+
+<code>create<code>：创建容器或者创建镜像
+
+<code>run<code>：运行docker，具体实现如下：
+
+首先获取docker的信息
+```
+const ContainerInfo::DockerInfo& dockerInfo = containerInfo.docker();
+```
+
+
+
+
+
+
+
+
 
 
 
