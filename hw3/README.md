@@ -588,3 +588,6 @@ task.command.arguments=['-g','daemon off;']
 ```
 python DockerScheduler.py 172.16.6.213 &
 ```
+
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/截图1.png"/></div>
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/截图2.png"/></div>
