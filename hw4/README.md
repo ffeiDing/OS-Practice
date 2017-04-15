@@ -24,7 +24,27 @@
 
 * 写操作
 
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS写操作.png"/></div>  
+将client要写入的block以副本的形式存储到至少三个DataNode中，如果client是DataNode节点，规则为：副本1，本节点；副本2，与副本1不同机架节点；副本3，与副本2同一机架的不同节点；其他副本随机挑选。如果client不是DataNode节点，规则为：副本1，随机节点；副本2，与副本1不同机架节点；副本3，与副本2同一机架的不同节点；其他副本随机挑选。
+
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS写操作.png"/></div> 
+
+假设有一个文件FileA，100M大小。client将FileA写入到HDFS上。HDFS按默认配置。HDFS分布在三个机架上Rack1，Rack2，Rack3
+
+流程如下：
+
+(1) client将FileA按照64M分块，分为64M的block1和36M的block2
+
+(2) client向NameNode发送写数据请求，如图中蓝色虚线所示
+
+(3) NameNode记录block1和block2的信息，返回可用的DataNode信息，如粉色虚线所示：block1：host2，host1，host3；block2：host7，host8，host4
+
+(4) client向DataNode以流式发送block1（如图红色实线所示）：将64M的block1按64k的package划分；将第一个package发送给host2；host2接收完后，将第一个package发送给host1，同时client向host2发送第二个package；host1接收完第一个package后，将第一个package发送给host3，同时接收host2发来的第二个package；以此类推，直到将block1发送完毕。
+
+(5) host2、host1、host3接收完毕后向NameNode发送接收完毕通知，host2向client发送接收完毕通知，如图中粉色实线所示
+
+(6) client接收到host2发来的消息后，向NameNode发送“block1写完”消息，如黄色实线所示
+
+(7) 类似发送block1的步骤，发送block2
 
 * 读操作
 
