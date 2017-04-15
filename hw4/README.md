@@ -28,9 +28,11 @@
 
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS写操作.png"/></div> 
 
-假设有一个文件FileA，100M大小。client将FileA写入到HDFS上。HDFS按默认配置。HDFS分布在三个机架上Rack1，Rack2，Rack3
+假设：
 
-流程如下：
+有一个文件FileA，100M大小。client将FileA写入到HDFS上。HDFS按默认配置。HDFS分布在三个机架上Rack1，Rack2，Rack3
+
+流程：
 
 (1) client将FileA按照64M分块，分为64M的block1和36M的block2
 
@@ -48,7 +50,27 @@
 
 * 读操作
 
+如果client是DataNode节点，优先读取本机架上的数据
+
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS读操作.png"/></div>  
+
+假设：
+
+client要从HDFS上读取FileA，FileA由block1和block2组成
+
+流程：
+
+(1) client向NameNode发送读FileA请求（蓝色虚线）
+
+(2) NameNode查找数据块映射，返回FileA的各个block的位置（粉色虚线）：block1：host2，host1，host3；block2：host7，host8，host4
+
+(3) client先去host2上读取block1，再去host7上读取block2
+
+
+
+
+
+
 
 
 
