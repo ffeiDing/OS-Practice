@@ -8,6 +8,8 @@
 
 * 结构
 
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS结构图.png"/></div>  
+
 如图所示，HDFS按照master和slave的结构，分为如下几个角色：
 
  (1) NameNode：master节点，管理数据块映射、处理客户端的读写请求、配置副本策略、管理HDFS的名称空间
@@ -22,9 +24,11 @@
 
 * 写操作
 
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS写操作.png"/></div>  
 
 * 读操作
 
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS读操作.png"/></div>  
 
 
 
@@ -59,7 +63,7 @@ docker images [OPTIONS] [REPOSITORY]
 ```
 docker images
 ```
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw3/dockerimages指令运行截图.png"/></div>  
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS结构图.png"/></div>  
 
 * 拉取镜像
 ```
