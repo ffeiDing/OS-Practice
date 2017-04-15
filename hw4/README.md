@@ -10,15 +10,15 @@
 
 如图所示，HDFS按照master和slave的结构，分为如下几个角色：
 
-(1)NameNode：master节点，管理数据块映射、处理客户端的读写请求、配置副本策略、管理HDFS的名称空间
+ (1) NameNode：master节点，管理数据块映射、处理客户端的读写请求、配置副本策略、管理HDFS的名称空间
 
-(2)SecondaryNameNode：分担NameNode的工作（从NameNode上获取fsimage和edits，合并后发回给NameNode）、是NameNode的冷备份（存储有NameNode部分信息，如果NameNode宕机，SecondaryNameNode不能马上代替NameNode工作，只能减少宕机损失）
+ (2) SecondaryNameNode：分担NameNode的工作（从NameNode上获取fsimage和edits，合并后发回给NameNode）、是NameNode的冷备份（存储有NameNode部分信息，如果NameNode宕机，SecondaryNameNode不能马上代替NameNode工作，只能减少宕机损失）
 
-(3)DataNode：slave节点，存储client发来的数据块block、执行数据块的读写操作
+ (3) DataNode：slave节点，存储client发来的数据块block、执行数据块的读写操作
 
-(4)fsimage：文件系统的目录树
+ (4) fsimage：文件系统的目录树
 
-(5)edits：针对文件系统做的修改操作记录
+ (5) edits：针对文件系统做的修改操作记录
 
 * 写操作
 
