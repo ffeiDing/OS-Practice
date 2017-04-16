@@ -66,9 +66,55 @@ client要从HDFS上读取FileA，FileA由block1和block2组成
 
 (3) client先去host2上读取block1，再去host7上读取block2
 
+#### 1.2 GlusterFS (Gluster File System)
 
+* 结构
 
+如图，GlusterFS架构中没有元数据服务器组件，主要由一下几部分构成：
 
+(1) Brick Server：存储服务器，提供数据存储功能，其上运行Glusterfsd进程负责处理来自其他组件的数据服务请求
+
+(2) 逻辑卷：多个Brick Server共同构成
+
+(3) Client：客户端，提供数据卷管理、I/O调度、文件定位、数据缓存等功能，其上运行Glusterfs进程，是Glusterfsd的符号链接，利用FUSE（File system in User Space）模块将GlusterFS挂载到本地文件系统之上，实现POSIX兼容的方式来访问系统数据。GlusterFS客户端负载相对传统分布式文件系统要高，包括CPU占用率和内存占用
+
+(4) Storage Gateway：存储网关，提供弹性卷管理和NFS/CIFS访问代理功能，其上运行Glusterd和Glusterfs进程，两者都是Glusterfsd符号链接。卷管理器负责逻辑卷的创建、删除、容量扩展与缩减、容量平滑等功能，并负责向客户端提供逻辑卷信息及主动更新通知功能等。对于没有安装GlusterFS的客户端，需要通过NFS/CIFS代理网关来访问，这时网关被配置成NFS或Samba服务器。相对原生客户端，网关在性能上要受到NFS/Samba的制约
+
+* 数据访问流程概览
+
+GlusterFS采用弹性哈希算法代替传统分布式文件系统中的集中或分布式元数据服务，从而获得了接近线性的高扩展性，同时也提高了系统性能和可靠性，具体流程如下：
+
+(1) 输入文件路径和文件名，计算哈希值
+
+(2) 根据哈希值在cluster中选择子卷（对应的Brick Server），进行文件定位
+
+(3) 对所选择的子卷（对应的Brick Server）进行数据访问
+
+* 功能模块
+
+如图，GlusterFS是模块化堆栈式的架构设计，其中的模块被称为Translator。每个Translator实现特定的基本功能，比如Cluster, Storage, Performance, Protocol, Features等，多个Translator通过堆栈式组合形成更复杂的功能。客户端和存储服务器均有自己的Translator栈，构成了一棵Translator功能树。主要有如下几个Translator：
+
+(1) Cluster：存储集群分布，有AFR, DHT, Stripe三种方式
+
+(2) Debug：跟踪GlusterFS内部函数和系统调用
+
+(3) Encryption：简单的数据加密实现
+
+(4) Features：访问控制、锁、Mac兼容、静默、配额、只读、回收站等
+
+(5) Mgmt：弹性卷管理
+
+(6) Mount：FUSE接口实现
+
+(7) Nfs：内部NFS服务器
+
+(8) Performance：io-cache, io-threads, quick-read, read-ahead, stat-prefetch, sysmlink-cache, write-behind等性能优化
+
+(9) Protocol：服务器和客户端协议实现
+
+(10) Storage：底层文件系统POSIX接口实现
+
+其中Cluster是实现GlusterFS集群存储的核心。<code>ARF</code>将同一文件在多个存储节点上保留多份，所有子卷上具有相同的名字空间，查找文件时从第一个节点开始，直到搜索成功或最后节点搜索完毕。读数据时，AFR会把所有请求调度到所有存储节点，进行负载均衡以提高系统性能。写数据时，首先需要在所有锁服务器上对文件加锁，默认第一个节点为锁服务器，可以指定多个。然后，AFR以日志事件方式对所有服务器进行写数据操作，成功后删除日志并解锁。<code>DHT</code>即弹性哈希算法，它采用hash方式进行数据分布，名字空间分布在所有节点上。查找文件时，通过弹性哈希算法进行，不依赖名字空间。但遍历文件目录时，则实现较为复杂和低效，需要搜索所有的存储节点。单一文件只会调度到唯一的存储节点，一旦文件被定位后，读写模式相对简单。DHT不具备容错能力，需要借助AFR实现高可用性。<code>Stripe</code>实现分片存储，文件被划分成固定长度的数据分片以Round-Robin轮转方式存储在所有存储节点。所有存储节点组成完整的名字空间，查找文件时需要询问所有节点，非常低效。读写数据时，Stripe涉及全部分片存储节点，操作可以在多个节点之间并发执行，性能非常高。Stripe通常与AFR组合使用，同时获得高性能和高可用性，但存储利用率会低于50%
 
 
 
