@@ -181,7 +181,47 @@ GlusterFS采用弹性哈希算法代替传统分布式文件系统中的集中�
 
 4、就主流而言，HDFS具有压倒性的优势，Facebook、Yahoo、阿里、腾讯、百度等都是使用者；豆瓣使用了MooseFS；很多互联网视频公司用GlusterFS来做片库
 
-### 2、联合文件系统
+### 2、联合文件系统--AUFS（Advanced Multi Layered Unification File System）
+
+* 所谓UnionFS就是把不同物理位置的目录合并mount到同一个目录中，比如，我们有两个目录（水果和蔬菜），并在这两个目录中放上一些文件，水果中有苹果和蕃茄，蔬菜有胡萝卜和蕃茄，如下：
+
+```
+$ tree
+.
+├── fruits
+│   ├── apple
+│   └── tomato
+└── vegetables
+    ├── carrots
+    └── tomato
+```
+输入以下命令
+```
+# 创建一个mount目录
+$ mkdir mnt
+
+# 把水果目录和蔬菜目录union mount到 ./mnt目录中
+$ sudo mount -t aufs -o dirs=./fruits:./vegetables none ./mnt
+
+#  查看./mnt目录
+$ tree ./mnt
+./mnt
+├── apple
+├── carrots
+└── tomato
+```
+我们可以看到在./mnt目录下有三个文件，苹果apple、胡萝卜carrots和蕃茄tomato。水果和蔬菜的目录被union到了./mnt目录下了
+
+
+* AUFS的特性
+
+AUFS有所有UnionFS的特性，把多个目录合并成同一个目录，可以为每个需要合并的目录指定相应的权限，实时的添加、删除、修改已经被mount好的目录。还能在多个可写的branch/dir间进行负载均衡。
+
+* AUFS的性能
+
+AUFS会把所有的分支mount起来，查找文件比较慢。因为它要遍历所有的branch，所以branch越多，查找文件的性能也就越慢。在write/read操作上，性能没有什么变化。
+
+
 
 
 
