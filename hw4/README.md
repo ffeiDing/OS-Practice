@@ -8,7 +8,7 @@
 
 * 结构
 
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS结构图.png"/></div>  
+<div align=left><img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS结构图.png"/></div>  
 
 如图所示，HDFS按照master和slave的结构，分为如下几个角色：
 
@@ -26,7 +26,7 @@
 
 将client要写入的block以副本的形式存储到至少三个DataNode中，如果client是DataNode节点，规则为：副本1，本节点；副本2，与副本1不同机架节点；副本3，与副本2同一机架的不同节点；其他副本随机挑选。如果client不是DataNode节点，规则为：副本1，随机节点；副本2，与副本1不同机架节点；副本3，与副本2同一机架的不同节点；其他副本随机挑选。
 
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS写操作.png"/></div> 
+<div align=left><img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS写操作.png"/></div> 
 
 假设：
 
@@ -51,7 +51,7 @@
 * 读操作
 
 如果client是DataNode节点，优先读取本机架上的数据
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS读操作.png"/></div>  
+<div align=left><img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS读操作.png"/></div>  
 
 假设：
 
