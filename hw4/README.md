@@ -94,7 +94,7 @@ GlusterFS采用弹性哈希算法代替传统分布式文件系统中的集中�
 
 * 功能模块
 
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/GlusterFS模块栈.png"/></div> 
+<div align=left><img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/GlusterFS模块栈.png"/></div> 
 
 如图，GlusterFS是模块化堆栈式的架构设计，其中的模块被称为Translator。每个Translator实现特定的基本功能，比如Cluster, Storage, Performance, Protocol, Features等，多个Translator通过堆栈式组合形成更复杂的功能。客户端和存储服务器均有自己的Translator栈，构成了一棵Translator功能树。主要有如下几个Translator：
 
