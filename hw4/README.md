@@ -51,7 +51,6 @@
 * 读操作
 
 如果client是DataNode节点，优先读取本机架上的数据
-
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS读操作.png"/></div>  
 
 假设：
@@ -66,7 +65,52 @@ client要从HDFS上读取FileA，FileA由block1和block2组成
 
 (3) client先去host2上读取block1，再去host7上读取block2
 
-#### 1.2 GlusterFS (Gluster File System)
+#### 1.2 MooseFS (Moose File System)
+
+* 结构
+
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/GlusterFS架构.png"/></div>  
+
+如图，MooseFS按照master和slave的结构，分为如下几个角色：
+
+(1) Master：元数据服务器，master节点，负责各个数据存储服务器的管理，文件读写调度，文件空间回收以及恢复，多节点拷贝
+
+(2) Metalogger：元数据日志服务器，负责备份Master服务器的changelog，在Master出问题时接替其工作
+
+(3) Chunk：数据存储服务器，负责连接Master，听从Master调度，提供存储空间，并为客户端提供数据传输
+
+(4) Client：客户端挂载，通过FUSE内核接口挂载远程管理服务器（Master）上所管理的数据存储服务器（Chunk），使用起来和本地文件系统一样
+
+* 写操作
+
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/GlusterFS架构.png"/></div> 
+
+(1) Client给Master写操作的消息
+
+(2) Master判断写入哪个Chunk，既可以选择一个已有的Chunk，也可以创建一个新的Chunk，将目标Chunk返回给Client
+
+(3) Client向目标Chunk写入数据
+
+(4) Chunk同步数据
+
+(5) Chunk返回“成功”消息给Client
+
+(6) Client返回“完毕”消息给Master
+
+* 读操作
+
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/GlusterFS架构.png"/></div> 
+
+(1) Client给Master读操作的消息
+
+(2) Master判断数据在哪个Chunk上，将目标Chunk返回给Client
+
+(3) Client向目标Chunk发送“send me the data”消息
+
+(4) Chunk返回数据给Client
+
+
+#### 1.3 GlusterFS (Gluster File System)
 
 * 结构
 
