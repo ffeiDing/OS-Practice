@@ -83,7 +83,7 @@ client要从HDFS上读取FileA，FileA由block1和block2组成
 
 * 写操作
 
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/MooseFS写操作.png"/></div> 
+<div align=left><img width="60%" height="60%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/MooseFS写操作.png"/></div> 
 
 (1) Client给Master写操作的消息
 
@@ -99,7 +99,7 @@ client要从HDFS上读取FileA，FileA由block1和block2组成
 
 * 读操作
 
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/MooseFS读操作.png"/></div> 
+<div align=left><img width="60%" height="60%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/MooseFS读操作.png"/></div> 
 
 (1) Client给Master读操作的消息
 
