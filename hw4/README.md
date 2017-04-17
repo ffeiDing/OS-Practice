@@ -394,7 +394,7 @@ docker run -v /html:/html -p 4040:80 -d --name hw4 \
 ubuntu_docker_hw4 nginx -g 'daemon off;'
 ```
 登录燕云，将1003的4040端口转发到外网的4040端口，浏览器访问http://162.105.174.40:4040，可以查看主页
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/GlusterFS架构.png"/></div>  
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/GlusterFS架构.png"/></div>  
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/转发端口.png"/></div>  
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/主页内容.png"/></div>  
 
 
