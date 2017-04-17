@@ -274,7 +274,32 @@ vim /etc/hosts
 172.16.6.192    server1
 ```
 其中server1对应的IP需要在1001上通过<code>ifconfig</code>指令查看
-
+### 在1001和1002上创建brick
+```
+mkdir -p /data/brick1
+```
+### 在1001（也可以在1002）创建复制卷test_volume，并启动该卷
+```
+gluster volume create test_volume replica 2 server1:/data/brick1 server2:/data/brick1 force
+gluster volume start test_volume
+gluster volume info
+```
+查看该卷的信息，表明创建成功
+```
+Volume Name: test_volume
+Type: Replicate
+Volume ID: f9e54e0b-0f0b-4869-b473-27cd0c2e8a51
+Status: Started
+Snapshot Count: 0
+Number of Bricks: 1 x 2 = 2
+Transport-type: tcp
+Bricks:
+Brick1: server1:/data/brick1
+Brick2: server2:/data/brick1
+Options Reconfigured:
+transport.address-family: inet
+nfs.disable: on
+```
 
 
 
