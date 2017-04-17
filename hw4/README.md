@@ -300,12 +300,57 @@ Options Reconfigured:
 transport.address-family: inet
 nfs.disable: on
 ```
+### 修改1003上的hosts文件
+```
+vim /etc/hosts
+```
+修改为
+```
+127.0.0.1       localhost
+127.0.1.1       oo-lab.cs1cloud.internal        oo-lab
+172.16.6.192    server1
+172.16.6.224     server2
+```
+### 在1003上创建挂载点，挂载test_volume卷
+```
+mkdir -p /storage
+mount -t glusterfs server1:/test_volume /storage
+```
+向/storage里存入50个文件，为hw4.txt的拷贝
+```
+for i in `seq -w 1 50`; do cp -rp /home/pkusei/hw4.txt /storage/copy-hw4-$i; done
+```
+### 检查1003挂载点/storage的存入情况
+```
+cd /storage
+ls
+```
+显示为：
+```
+copy-hw4-01  copy-hw4-07  copy-hw4-13  copy-hw4-19  copy-hw4-25  copy-hw4-31  copy-hw4-37  copy-hw4-43  copy-hw4-49
+copy-hw4-02  copy-hw4-08  copy-hw4-14  copy-hw4-20  copy-hw4-26  copy-hw4-32  copy-hw4-38  copy-hw4-44  copy-hw4-50
+copy-hw4-03  copy-hw4-09  copy-hw4-15  copy-hw4-21  copy-hw4-27  copy-hw4-33  copy-hw4-39  copy-hw4-45
+copy-hw4-04  copy-hw4-10  copy-hw4-16  copy-hw4-22  copy-hw4-28  copy-hw4-34  copy-hw4-40  copy-hw4-46
+copy-hw4-05  copy-hw4-11  copy-hw4-17  copy-hw4-23  copy-hw4-29  copy-hw4-35  copy-hw4-41  copy-hw4-47
+copy-hw4-06  copy-hw4-12  copy-hw4-18  copy-hw4-24  copy-hw4-30  copy-hw4-36  copy-hw4-42  copy-hw4-48
+```
+### 检查1001和1002的/brick1中的存入情况
+```
+cd /data/brick1
+ls
+```
+两者都显示为：
+```
+copy-hw4-01  copy-hw4-07  copy-hw4-13  copy-hw4-19  copy-hw4-25  copy-hw4-31  copy-hw4-37  copy-hw4-43  copy-hw4-49
+copy-hw4-02  copy-hw4-08  copy-hw4-14  copy-hw4-20  copy-hw4-26  copy-hw4-32  copy-hw4-38  copy-hw4-44  copy-hw4-50
+copy-hw4-03  copy-hw4-09  copy-hw4-15  copy-hw4-21  copy-hw4-27  copy-hw4-33  copy-hw4-39  copy-hw4-45
+copy-hw4-04  copy-hw4-10  copy-hw4-16  copy-hw4-22  copy-hw4-28  copy-hw4-34  copy-hw4-40  copy-hw4-46
+copy-hw4-05  copy-hw4-11  copy-hw4-17  copy-hw4-23  copy-hw4-29  copy-hw4-35  copy-hw4-41  copy-hw4-47
+copy-hw4-06  copy-hw4-12  copy-hw4-18  copy-hw4-24  copy-hw4-30  copy-hw4-36  copy-hw4-42  copy-hw4-48
+```
+也就是任意一台存储节点挂掉仍然能正常工作，因为另一台存储节点还保存有副本
 
-
-
-
-
-
+## 三、将web服务器的主页提前写好在分布式文件系统里，在docker容器启动的时候将分布式文件系统挂载到容器里，并将该主页拷贝到正确的路径下，使得访问网站时显示这个主页
 
 
 
