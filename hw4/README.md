@@ -367,13 +367,34 @@ mount -t glusterfs server2:/homepage /html
 ```
 存入主页文件
 ```
-vi /html/homepage.html
+vim /html/index.nginx-debian.html 
 ```
-
-
-
-
-
-
+### 在1003上创建容器并运行gnix
+在1002中以上次作业的ubuntu_docker2镜像创建容器hw4_docker，运行bash
+```
+docker run -it --name hw4_docker  ubuntu_docker2  /bin/bash 
+```
+进入新创建的容器后，修改/etc/nginx/sites-enabled/default中root的路径为/html
+```
+vim /etc/nginx/sites-enabled/default
+```
+修改完成后退出容器，将该容器保存为ubuntu_docker_hw4镜像
+```
+docker commit hw4_docker ubuntu_docker_hw4
+```
+将该镜像从1002传送到1003上
+```
+docker save -o save.tar ubuntu_docker_hw4
+scp -P 1003 save.tar pkusei@162.105.174.40:
+```
+在1003中以ubuntu_docker_hw4镜像创建后台容器并运行nginx，将/html挂载到容器中的/html中，将容器的80端口映射到宿主机的4040端口
+```
+docker load < save.tar
+docker run -v /html:/html -p 4040:80 -d --name hw4 \
+ubuntu_docker_hw4 nginx -g 'daemon off;'
+```
+登录燕云，将1003的4040端口转发到外网的4040端口，浏览器访问http://162.105.174.40:4040，可以查看主页
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/GlusterFS架构.png"/></div>  
+<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/GlusterFS架构.png"/></div>  
 
 
