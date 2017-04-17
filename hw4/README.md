@@ -222,12 +222,58 @@ AUFS有所有UnionFS的特性，把多个目录合并成同一个目录，可以
 AUFS会把所有的分支mount起来，查找文件比较慢。因为它要遍历所有的branch，所以branch越多，查找文件的性能也就越慢。在write/read操作上，性能没有什么变化。
 
 ## 二、安装配置一种分布式文件系统，要求启动容错机制，即一台存储节点挂掉仍然能正常工作
-### 1、安装GlusterFS
-
-
-
-
-
+### 在1001上安装GlusterFS服务器版本
+```
+sudo su
+```
+切换到root模式下
+```
+add-apt-repository ppa:gluster/glusterfs-3.10
+apt update
+apt install glusterfs-server
+```
+### 在1002上安装GlusterFS服务器版本
+```
+sudo su
+```
+切换到root模式下
+```
+add-apt-repository ppa:gluster/glusterfs-3.10
+apt update
+apt install glusterfs-server
+```
+### 在1003上安装GlusterFS客户端版本
+```
+sudo su
+```
+切换到root模式下
+```
+add-apt-repository ppa:gluster/glusterfs-3.10
+apt update
+apt install glusterfs-client
+```
+### 修改1001上的hosts文件
+```
+vim /etc/hosts
+```
+修改为
+```
+127.0.0.1       server1
+127.0.1.1       oo-lab.cs1cloud.internal        oo-lab
+172.16.6.224    server2
+```
+其中server2对应的IP需要在1002上通过<code>ifconfig</code>指令查看
+### 修改1002上的hosts文件
+```
+vim /etc/hosts
+```
+修改为
+```
+127.0.0.1       server2
+127.0.1.1       oo-lab.cs1cloud.internal        oo-lab
+172.16.6.192    server1
+```
+其中server1对应的IP需要在1001上通过<code>ifconfig</code>指令查看
 
 
 
