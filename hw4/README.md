@@ -351,6 +351,24 @@ copy-hw4-06  copy-hw4-12  copy-hw4-18  copy-hw4-24  copy-hw4-30  copy-hw4-36  co
 也就是任意一台存储节点挂掉仍然能正常工作，因为另一台存储节点还保存有副本
 
 ## 三、将web服务器的主页提前写好在分布式文件系统里，在docker容器启动的时候将分布式文件系统挂载到容器里，并将该主页拷贝到正确的路径下，使得访问网站时显示这个主页
+### 在1001和1002上分别新建一个brick来存储主页内容
+```
+mkdir -p /data/brick2
+```
+### 在1002（也可以在1001）创建复制卷homepage，并启动该卷
+```
+gluster volume create homepage replica 2 server1:/data/brick2 server2:/data/brick2 force
+gluster volume start homepage
+```
+### 在1003上创建挂载点，挂载homepage卷
+```
+mkdir -p /html
+mount -t glusterfs server2:/homepage /html
+```
+存入主页文件
+```
+vi /html/homepage.html
+```
 
 
 
