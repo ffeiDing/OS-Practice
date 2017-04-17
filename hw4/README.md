@@ -8,7 +8,55 @@
 
 * 结构
 
-<div align=left><img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS结构图.png"/></div>  
+<div align=left><img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/HDFS结构图.png"/></div>
+
+```
+repeat {
+	/* 将当前想访问临界区的进程的flag设为waiting */
+	flags[i] := WAITING;
+
+	/* 扫描从turn到当前进程编号的所有进程，一直等待直到所有进程（除了当前进程）的flag都为idle */
+	index := turn;
+	while (index != i) {
+		if (flags[index] != IDLE) index := turn;
+		else index := (index+1) mod n;
+	}
+
+	/* 将当期进程的flag设为active */
+	flags[i] := ACTIVE;
+
+	/* 从编号为0的进程开始，找到第一个active的进程（除当前进程外） */
+	index := 0;
+	while ((index < n) && ((index = i) || (flags[index] != ACTIVE))) {
+		index := index+1;
+	}
+
+	/* 当除了当前进程没有其他active进程且turn为当前进程编号 或者  turn的进程为idle状态 进入临界区*/	
+} until ((index >= n) && ((turn = i) || (flags[turn] = IDLE)));
+
+/* 进入临界区 */
+
+/* 将turn设置为当前进程编号 */
+turn := i;
+
+/* 执行临界区代码 */
+
+/* 退出临界区 */
+
+/* 寻找不是idle状态的进程，如果找不到，index为当前进程编号 */
+index := (turn+1) mod n;
+while (flags[index] = IDLE) {
+	index := (index+1) mod n;
+}
+
+/* 将turn设置为不是idle状态的进程编号，如果没有，保持为当前进程编号 */
+turn := index;
+
+/* 将当前进程状态设置为idle */
+flags[i] := IDLE;
+
+/* 剩余代码区 */
+```
 
 如图所示，HDFS按照master和slave的结构，分为如下几个角色：
 
