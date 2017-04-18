@@ -369,7 +369,7 @@ mount -t glusterfs server2:/homepage /html
 ```
 vim /html/index.nginx-debian.html 
 ```
-### 在1003上创建容器并运行gnix
+### 在1003上创建容器并运行nginx
 在1002中以上次作业的ubuntu_docker2镜像创建容器hw4_docker，运行bash
 ```
 docker run -it --name hw4_docker  ubuntu_docker2  /bin/bash 
