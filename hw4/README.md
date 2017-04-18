@@ -309,7 +309,7 @@ vim /etc/hosts
 127.0.0.1       localhost
 127.0.1.1       oo-lab.cs1cloud.internal        oo-lab
 172.16.6.192    server1
-172.16.6.224     server2
+172.16.6.224    server2
 ```
 ### 在1003上创建挂载点，挂载test_volume卷
 ```
