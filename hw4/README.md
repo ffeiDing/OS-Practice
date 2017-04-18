@@ -398,3 +398,29 @@ ubuntu_docker_hw4 nginx -g 'daemon off;'
 <div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/主页内容.png"/></div>  
 
 ## 四、完成一次镜像的制作
+### docker的镜像机制
+* docker镜像的内容 主要包含两个部分：镜像层文件内容和镜像json文件。容器是一个动态的环境，每一层镜像中的文件属于静态内容，然而Dockerfile中的ENV、VOLUME、CMD等内容最终都需要落实到容器的运行环境中，而这些内容均不可能直接坐落到每一层镜像所包含的文件系统内容中，因此每一个docker镜像还会包含json文件记录与容器之间的关系。
+* docker镜像存储位置 docker镜像层的内容一般在docker根目录的aufs路径下，为 /var/lib/docker/aufs/diff/；对于每一个镜像层，docker都会保存一份相应的 json文件，json文件的存储路径为 /var/lib/docker/graph
+
+### 通过ubuntu镜像创建一个docker容器，命名为hw4
+```
+docker create -it --name hw4 ubuntu /bin/bash
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
