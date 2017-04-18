@@ -417,13 +417,82 @@ df -hT
 ```
 挂载记录如下
 ```
-none                         aufs       19G  8.0G  9.3G  47% /var/lib/docker/aufs/mnt/6516eac1e749293aaa4c3dbac4628cecb660e91643a54d486034c83cd144c299
+none                         aufs       19G  7.7G  9.5G  45% /var/lib/docker/aufs/mnt/927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd
 ```
-
-
-
-
-
+### 查看层级信息
+```
+cd /var/lib/docker/aufs/layers
+cat 927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd
+```
+显示出如下层级信息，927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd是只读层，从下至上的五层是Ubuntu镜像中的，最上面一层是容器运行时创建的
+```
+927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd-init
+3f4753a50a4ac039b7dc059818395c653f3afa8a4d0104f8db7bc42a7291c76f
+b70de0e23202701f5298813331c7f57679b30a0467efafd1eba99a119ca11e7c
+43251f5dc49cc7dbbd4344212bce2ae564d24d928cbd9933bcbe11972d727f93
+3f519af4b36f34c2caf181b699043aa679751827f903b10267f01fc6e3524d59
+7a3804e013b94d6ac8df3ad94ddd68e0e314de65febee115beb325bf2bfadb79
+```
+### 保存层级信息
+创建新的目录用来保存
+```
+mkdir /home/pkusei/hw_images
+```
+保存到创建的目录下
+```
+cp -r 7a3804e013b94d6ac8df3ad94ddd68e0e314de65febee115beb325bf2bfadb79/ \
+ /home/pkusei/hw_images/0
+cp -r 3f519af4b36f34c2caf181b699043aa679751827f903b10267f01fc6e3524d59/ \
+ /home/pkusei/hw_images/1
+cp -r 43251f5dc49cc7dbbd4344212bce2ae564d24d928cbd9933bcbe11972d727f93/ \
+ /home/pkusei/hw_images/2
+cp -r b70de0e23202701f5298813331c7f57679b30a0467efafd1eba99a119ca11e7c/ \
+ /home/pkusei/hw_images/3
+cp -r 3f4753a50a4ac039b7dc059818395c653f3afa8a4d0104f8db7bc42a7291c76f/ \
+ /home/pkusei/hw_images/4
+```
+### 切换到原来的终端，在容器中安装软件
+```
+apt update
+apt install nginx
+apt install vim
+```
+### 切换到另一个终端，保存927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd最高层
+```
+cp -r 927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd/ \
+ /home/pkusei/hw_images/software
+```
+### 使用aufs挂载保存的镜像
+创建挂载点
+```
+mkdir /home/pkusei/hw_mount
+```
+将镜像挂载到挂载点下
+```
+mount -t aufs -o br=/home/pkusei/hw_images/software=ro\
+ :/home/pkusei/hw_images/4=ro:/home/pkusei/hw_images/3=ro\
+ :/home/pkusei/hw_images/2=ro:/home/pkusei/hw_images/1=ro\
+ :/home/pkusei/hw_images/0=ro none /home/pkusei/hw_mount
+```
+### 从挂载点创建新镜像
+切换到挂载点
+```
+cd /home/pkusei/hw_mount
+```
+创建镜像
+```
+tar -c . | docker import - hw4_image
+```
+### 从该镜像中创建容器，使用软件包
+创建容器
+```
+docker run -it --name hw4_image_docker hw4_image /bin/bash
+```
+查看容器中是否可以使用vim，nginx等之前安装的软件
+```
+vim 233.txt
+```
+可以使用vim指令编辑文件，可以使用之前安装好的软件包
 
 
 
