@@ -406,12 +406,19 @@ ubuntu_docker_hw4 nginx -g 'daemon off;'
  
  docker镜像层的内容一般在docker根目录的aufs路径下，为 /var/lib/docker/aufs/diff/；对于每一个镜像层，docker都会保存一份相应的 json文件，json文件的存储路径为 /var/lib/docker/graph
 
-### 通过ubuntu镜像创建一个docker容器，命名为hw4
+### 通过ubuntu镜像创建一个docker容器，命名为hw4，并启动
 ```
 docker create -it --name hw4 ubuntu /bin/bash
+docker start -i hw4
 ```
-
-
+### 再开一个新的终端以查看容器的挂载记录
+```
+df -hT
+```
+挂载记录如下
+```
+none                         aufs       19G  8.0G  9.3G  47% /var/lib/docker/aufs/mnt/6516eac1e749293aaa4c3dbac4628cecb660e91643a54d486034c83cd144c299
+```
 
 
 
