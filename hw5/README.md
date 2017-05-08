@@ -36,7 +36,7 @@ iptables是用来进行IP数据包filter和NAT的工具
 
 ### NAT表
 
-有三种内建链
+有三种内建链：
 
 * OUTPUT：处理产生的要输出的数据包
 
