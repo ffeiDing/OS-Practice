@@ -22,7 +22,7 @@ route是根据路由表进行路由判断，得到下一节点的地址
 
 ### iptables
 
-iptables是用来进行IP数据包filter和NAT的工具
+iptables是用来进行IP数据包filter和NAT的工具，由filter表和NAT表组成
 
 ### filter表
 
