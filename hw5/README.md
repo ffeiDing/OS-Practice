@@ -64,6 +64,14 @@ ssh: connect to host 162.105.174.40 port 1001: Connection refused
 iptables -D INPUT -s 10.0.35.198 -j REJECT
 ```
 ### 2、拒绝来自某一特定mac地址的访问
+* 查看1002服务器的mac地址
+```
+02:00:4d:28:00:03
+```
+* 登录1001服务器，输入命令
+```
+iptables -A INPUT -m mac --mac-source 02:00:4d:28:00:03 -j REJECT
+```
 ### 3、只开放本机的http服务，其余协议与端口均拒绝
 ### 4、拒绝回应来自某一特定IP地址的ping命令
 ```
