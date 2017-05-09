@@ -133,65 +133,24 @@ iptables -D INPUT -p icmp --icmp-type 8 -s 172.16.6.224 -j REJECT
 
 ## 三、解释Linux网络设备工作原理
 ### 1、bridge工作过程
+
+* Linux内核通过一个虚拟的网桥设备来实现桥接的，这个设备可以绑定若干个以太网接口设备，从而将它们桥接起来。如下图所示：
+
+* 网桥设备br0绑定了eth0和eth1。对于网络协议栈的上层来说，只看得到br0，因为桥接是在数据链路层实现的，上层不需要关心桥接的细节。于是协议栈上层需要发送的报文被送到br0，网桥设备的处理代码再来判断报文该被转发到eth0或是eth1，或者两者皆是；反过来，从eth0或从eth1接收到的报文被提交给网桥的处理代码，在这里会判断报文该转发、丢弃、或提交到协议栈上层。而有时候eth0、eth1也可能会作为报文的源地址或目的地址，直接参与报文的发送与接收（从而绕过网桥）。
+
 ### 2、vlan工作过程
+
+* vlan即虚拟局域网，一个vlan能够模拟一个常规的交换网络，实现了将一个物理的交换机划分成多个逻辑的交换网络。而不同的vlan之间如果要进行通信就要通过三层协议来实现，在二层协议里插入额外的vlan协议数据，同时保持和传统二层设备的兼容性。
+
+* 如图所示，VLAN设备是以母子关系成对出现的，母设备相当于现实世界中的交换机TRUNK口，用于连接上级网络，子设备相当于普通接口用于连接下级网络。当一个子设备有一包数据需要发送时，数据将被加入VLAN Tag然后从母设备发送出去。当母设备收到一包数据时，它将会分析其中的VLAN Tag，如果有对应的子设备存在，则把数据转发到那个子设备上并根据设置移除VLAN Tag，否则丢弃该数据。和Bridge一样，母子设备的数据也是有方向的，子设备收到的数据不会进入母设备，同样母设备上请求发送的数据不会被转到子设备上。
+
+* 需要注意的是母子VLAN设备拥有相同的MAC地址，多个VLAN设备会共享一个MAC。当一个母设备拥有多个VLAN子设备时，子设备之间是隔离的，不存在Bridge那样的交换转发关系，如果子设备间想要交换数据，就需要将子设备attach到bridge上。
+
 ### 3、veth工作过程
 
+* VETH的作用是反转通讯数据的方向，需要发送的数据会被转换成需要收到的数据重新送入内核网络层进行处理，从而间接地完成数据的注入。VETH设备总是成对出现，送到一端请求发送的数据总是从另一端以请求接受的形式出现。该设备不能被用户程序直接操作，但使用起来比较简单。创建并配置正确后，向其一端输入数据，VETH会改变数据的方向并将其送入内核网络核心，完成数据的注入，在另一端能读到此数据。
 
-
-
-
-
-
-
-
-
-
-```
-mkdir -p /data/brick2
-```
-### 在1002（也可以在1001）创建复制卷homepage，并启动该卷
-```
-gluster volume create homepage replica 2 server1:/data/brick2 server2:/data/brick2 force
-gluster volume start homepage
-```
-### 在1003上创建挂载点，挂载homepage卷
-```
-mkdir -p /html
-mount -t glusterfs server2:/homepage /html
-```
-存入主页文件
-```
-vim /html/index.nginx-debian.html 
-```
-### 在1003上创建容器并运行nginx
-在1002中以上次作业的ubuntu_docker2镜像创建容器hw4_docker，运行bash
-```
-docker run -it --name hw4_docker  ubuntu_docker2  /bin/bash 
-```
-进入新创建的容器后，修改/etc/nginx/sites-enabled/default中root的路径为/html
-```
-vim /etc/nginx/sites-enabled/default
-```
-修改完成后退出容器，将该容器保存为ubuntu_docker_hw4镜像
-```
-docker commit hw4_docker ubuntu_docker_hw4
-```
-将该镜像从1002传送到1003上
-```
-docker save -o save.tar ubuntu_docker_hw4
-scp -P 1003 save.tar pkusei@162.105.174.40:
-```
-在1003中以ubuntu_docker_hw4镜像创建后台容器并运行nginx，将/html挂载到容器中的/html中，将容器的80端口映射到宿主机的4040端口
-```
-docker load < save.tar
-docker run -v /html:/html -p 4040:80 -d --name hw4 \
-ubuntu_docker_hw4 nginx -g 'daemon off;'
-```
-登录燕云，将1003的4040端口转发到外网的4040端口，浏览器访问http://162.105.174.40:4040 可以查看主页
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/转发端口.png"/></div>  
-<div align=left><img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw4/picture/主页内容.png"/></div>  
-
-## 四、完成一次镜像的制作
+## 四、说明在calico容器网络中，一个数据包从源容器发送到目标容器接收的具体过程
 ### docker的镜像机制
 * docker镜像的内容 
 
