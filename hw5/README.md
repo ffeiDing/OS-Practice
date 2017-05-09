@@ -72,6 +72,19 @@ iptables -D INPUT -s 10.0.35.198 -j REJECT
 ```
 iptables -A INPUT -m mac --mac-source 02:00:4d:28:00:03 -j REJECT
 ```
+* 登录1002服务器，ping1001服务器，发现不可达
+```
+ping 172.16.6.192
+PING 172.16.6.192 (172.16.6.192) 56(84) bytes of data.
+From 172.16.6.192 icmp_seq=7 Destination Port Unreachable
+From 172.16.6.192 icmp_seq=9 Destination Port Unreachable
+From 172.16.6.192 icmp_seq=10 Destination Port Unreachable
+...
+```
+* 恢复访问
+```
+iptables -D INPUT -m mac --mac-source 02:00:4d:28:00:03 -j REJECT
+```
 ### 3、只开放本机的http服务，其余协议与端口均拒绝
 ### 4、拒绝回应来自某一特定IP地址的ping命令
 ```
