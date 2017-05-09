@@ -109,135 +109,43 @@ iptables -P INPUT ACCEPT
 iptables -D INPUT -p tcp --dport 80 -j ACCEPT
 ```
 ### 4、拒绝回应来自某一特定IP地址的ping命令
+* 查看1002的IP地址
 ```
-sudo su
+172.16.6.224
 ```
-切换到root模式下
+* 在1001服务器上输入命令
 ```
-add-apt-repository ppa:gluster/glusterfs-3.10
-apt update
-apt install glusterfs-server
+iptables -A INPUT -p icmp --icmp-type 8 -s 172.16.6.224 -j REJECT
 ```
-### 在1002上安装GlusterFS服务器版本
+* 检查效果，1002服务器向1001服务器ping
 ```
-sudo su
+ping 172.16.6.192
+From 172.16.6.192 icmp_seq=1 Destination Port Unreachable
+From 172.16.6.192 icmp_seq=2 Destination Port Unreachable
+From 172.16.6.192 icmp_seq=3 Destination Port Unreachable
+From 172.16.6.192 icmp_seq=4 Destination Port Unreachable
+...
 ```
-切换到root模式下
+* 取消拒绝
 ```
-add-apt-repository ppa:gluster/glusterfs-3.10
-apt update
-apt install glusterfs-server
+iptables -D INPUT -p icmp --icmp-type 8 -s 172.16.6.224 -j REJECT
 ```
-### 在1003上安装GlusterFS客户端版本
-```
-sudo su
-```
-切换到root模式下
-```
-add-apt-repository ppa:gluster/glusterfs-3.10
-apt update
-apt install glusterfs-client
-```
-### 修改1001上的hosts文件
-```
-vim /etc/hosts
-```
-修改为
-```
-127.0.0.1       server1
-127.0.1.1       oo-lab.cs1cloud.internal        oo-lab
-172.16.6.224    server2
-```
-其中server2对应的IP需要在1002上通过<code>ifconfig</code>指令查看
-### 修改1002上的hosts文件
-```
-vim /etc/hosts
-```
-修改为
-```
-127.0.0.1       server2
-127.0.1.1       oo-lab.cs1cloud.internal        oo-lab
-172.16.6.192    server1
-```
-其中server1对应的IP需要在1001上通过<code>ifconfig</code>指令查看
-### 在1001和1002上创建brick
-```
-mkdir -p /data/brick1
-```
-### 在1001（也可以在1002）创建复制卷test_volume，并启动该卷
-```
-gluster volume create test_volume replica 2 server1:/data/brick1 server2:/data/brick1 force
-gluster volume start test_volume
-gluster volume info
-```
-查看该卷的信息，表明创建成功
-```
-Volume Name: test_volume
-Type: Replicate
-Volume ID: f9e54e0b-0f0b-4869-b473-27cd0c2e8a51
-Status: Started
-Snapshot Count: 0
-Number of Bricks: 1 x 2 = 2
-Transport-type: tcp
-Bricks:
-Brick1: server1:/data/brick1
-Brick2: server2:/data/brick1
-Options Reconfigured:
-transport.address-family: inet
-nfs.disable: on
-```
-### 修改1003上的hosts文件
-```
-vim /etc/hosts
-```
-修改为
-```
-127.0.0.1       localhost
-127.0.1.1       oo-lab.cs1cloud.internal        oo-lab
-172.16.6.192    server1
-172.16.6.224    server2
-```
-### 在1003上创建挂载点，挂载test_volume卷
-```
-mkdir -p /storage
-mount -t glusterfs server1:/test_volume /storage
-```
-向/storage里存入50个文件，为hw4.txt的拷贝
-```
-for i in `seq -w 1 50`; do cp -rp /home/pkusei/hw4.txt /storage/copy-hw4-$i; done
-```
-### 检查1003挂载点/storage的存入情况
-```
-cd /storage
-ls
-```
-显示为：
-```
-copy-hw4-01  copy-hw4-07  copy-hw4-13  copy-hw4-19  copy-hw4-25  copy-hw4-31  copy-hw4-37  copy-hw4-43  copy-hw4-49
-copy-hw4-02  copy-hw4-08  copy-hw4-14  copy-hw4-20  copy-hw4-26  copy-hw4-32  copy-hw4-38  copy-hw4-44  copy-hw4-50
-copy-hw4-03  copy-hw4-09  copy-hw4-15  copy-hw4-21  copy-hw4-27  copy-hw4-33  copy-hw4-39  copy-hw4-45
-copy-hw4-04  copy-hw4-10  copy-hw4-16  copy-hw4-22  copy-hw4-28  copy-hw4-34  copy-hw4-40  copy-hw4-46
-copy-hw4-05  copy-hw4-11  copy-hw4-17  copy-hw4-23  copy-hw4-29  copy-hw4-35  copy-hw4-41  copy-hw4-47
-copy-hw4-06  copy-hw4-12  copy-hw4-18  copy-hw4-24  copy-hw4-30  copy-hw4-36  copy-hw4-42  copy-hw4-48
-```
-### 检查1001和1002的/brick1中的存入情况
-```
-cd /data/brick1
-ls
-```
-两者都显示为：
-```
-copy-hw4-01  copy-hw4-07  copy-hw4-13  copy-hw4-19  copy-hw4-25  copy-hw4-31  copy-hw4-37  copy-hw4-43  copy-hw4-49
-copy-hw4-02  copy-hw4-08  copy-hw4-14  copy-hw4-20  copy-hw4-26  copy-hw4-32  copy-hw4-38  copy-hw4-44  copy-hw4-50
-copy-hw4-03  copy-hw4-09  copy-hw4-15  copy-hw4-21  copy-hw4-27  copy-hw4-33  copy-hw4-39  copy-hw4-45
-copy-hw4-04  copy-hw4-10  copy-hw4-16  copy-hw4-22  copy-hw4-28  copy-hw4-34  copy-hw4-40  copy-hw4-46
-copy-hw4-05  copy-hw4-11  copy-hw4-17  copy-hw4-23  copy-hw4-29  copy-hw4-35  copy-hw4-41  copy-hw4-47
-copy-hw4-06  copy-hw4-12  copy-hw4-18  copy-hw4-24  copy-hw4-30  copy-hw4-36  copy-hw4-42  copy-hw4-48
-```
-也就是任意一台存储节点挂掉仍然能正常工作，因为另一台存储节点还保存有副本
 
-## 三、将web服务器的主页提前写好在分布式文件系统里，在docker容器启动的时候将分布式文件系统挂载到容器里，并将该主页拷贝到正确的路径下，使得访问网站时显示这个主页
-### 在1001和1002上分别新建一个brick来存储主页内容
+## 三、解释Linux网络设备工作原理
+### 1、bridge工作过程
+### 2、vlan工作过程
+### 3、veth工作过程
+
+
+
+
+
+
+
+
+
+
+
 ```
 mkdir -p /data/brick2
 ```
