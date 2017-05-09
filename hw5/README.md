@@ -4,6 +4,8 @@
 ## 一、描述Linux内核如何对IP数据包进行处理
 如下图所示，Linux内核通过Netfilter进行IP数据包处理
 
+<img width="50%" height="50%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw5/pictures/Linux网络包处理.png"/>
+
 Netfilter为多种网络协议各提供了一套钩子函数。像有几个钓鱼台，在每个钓鱼台放了一个鱼钩(钩子函数)，把经过的数据包钓上来，然后根据自定义的规则，来决定数据包的命运：可以原封不动的放回IP协议栈，继续向上层递交；也可以进行修改，再放回IP协议栈；也可以直接丢弃。
 
 ### 具体流程
@@ -141,6 +143,8 @@ iptables -D INPUT -p icmp --icmp-type 8 -s 172.16.6.224 -j REJECT
 ### 2、vlan工作过程
 
 * vlan即虚拟局域网，一个vlan能够模拟一个常规的交换网络，实现了将一个物理的交换机划分成多个逻辑的交换网络。而不同的vlan之间如果要进行通信就要通过三层协议来实现，在二层协议里插入额外的vlan协议数据，同时保持和传统二层设备的兼容性。
+
+<img width="50%" height="50%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw5/pictures/VLAN设备工作过程.png"/>
 
 * 如图所示，VLAN设备是以母子关系成对出现的，母设备相当于现实世界中的交换机TRUNK口，用于连接上级网络，子设备相当于普通接口用于连接下级网络。当一个子设备有一包数据需要发送时，数据将被加入VLAN Tag然后从母设备发送出去。当母设备收到一包数据时，它将会分析其中的VLAN Tag，如果有对应的子设备存在，则把数据转发到那个子设备上并根据设置移除VLAN Tag，否则丢弃该数据。和Bridge一样，母子设备的数据也是有方向的，子设备收到的数据不会进入母设备，同样母设备上请求发送的数据不会被转到子设备上。
 
