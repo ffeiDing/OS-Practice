@@ -162,6 +162,7 @@ calico能够方便的部署在物理服务器、虚拟机或者容器环境下�
 在主机网络拓扑的组织上，calico在主机上启动虚拟机路由器，将每个主机作为路由器使用，组成互联互通的网络拓扑。当安装了calico的主机组成集群后，每个主机上都部署了calico/node作为虚拟路由器，并且可以通过calico将宿主机组织成任意的拓扑集群。当集群中的容器需要与外界通信时，就可以通过BGP协议将网关物理路由器加入到集群中，使外界可以直接访问容器IP，而不需要做任何NAT之类的复杂操作。
 
 架构如下图所示
+
 <img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw5/pictures/VLAN设备工作过程.png"/>
 
 * Felix：Calico Agent，跑在每台需要运行Workload的节点上，主要负责配置路由及ACLS等信息来确保Endpoint的连通状态。
