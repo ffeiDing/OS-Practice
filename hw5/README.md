@@ -327,7 +327,7 @@ IPv4 BGP status
 IPv6 BGP status
 No IPv6 peers found.
 ```
-* 在1001主机上创建创建calico的IP池
+* 在1001主机上创建calico的IP池
 ```
 cat << EOF | calicoctl create -f -
 - apiVersion: v1
@@ -337,7 +337,7 @@ cat << EOF | calicoctl create -f -
 EOF
 Successfully created 1 'ipPool' resource(s)
 ```
-* 通过创建Dockerfile制作jupyter镜像
+* 在三台主机上通过创建Dockerfile制作jupyter镜像
 ```
 FROM ubuntu:latest
 
@@ -367,10 +367,53 @@ RUN echo 'The Internet access and sudo privilege are available. You can install 
 USER admin
 WORKDIR /home/admin
 
-# 执行jupyter
 CMD ["/usr/local/bin/jupyter", "notebook", "--NotebookApp.token=", "--ip=0.0.0.0", "--port=8888"]
 ```
+创建镜像
+```
+docker build -t jupyter
+```
+* 在三台主机上通过Dockerfile制作带ssh的ubuntu镜像
+```
+FROM ubuntu:latest
 
+MAINTAINER dff
 
+RUN apt update
+RUN apt install -y sudo ssh
 
+RUN useradd -ms /bin/bash admin
+RUN adduser admin sudo
+RUN echo 'admin:admin' | chpasswd
+
+RUN mkdir /var/run/sshd
+
+RUN mkdir /home/admin/first_folder
+USER admin
+WORKDIR /home/admin
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]
+```
+创建镜像
+```
+docker build -t ubuntu_ssh
+```
+* 在1001服务器上创建calico容器网络
+```
+docker network create --driver calico --ipam-driver calico-ipam --subnet=192.168.0.0/16 my_net
+```
+* 安装configurable-http-proxy
+```
+apt install -y npm nodejs-legacy
+npm install -g configurable-http-proxy
+```
+* 在1002和1003上提前设置机器到jupyter容器的转发
+```
+nohup configurable-http-proxy --default-target=http://192.168.0.100:8888 --ip=172.16.6.224 --port=8888 > http_proxy.log 2>&1 &
+```
+```
+nohup configurable-http-proxy --default-target=http://192.168.0.100:8888 --ip=172.16.6.213 --port=8888 > http_proxy.log 2>&1 &
+```
 
