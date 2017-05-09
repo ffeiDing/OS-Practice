@@ -189,126 +189,56 @@ calico能够方便的部署在物理服务器、虚拟机或者容器环境下�
 
 
 ## 五、调研除calico以外的任意一种容器网络方案(如weave、ovs、docker swarm overlay)，比较其与calico的优缺点。
+### 1、weave
+### weave架构
+weave通过在docker集群的每个主机上启动虚拟的路由器，将主机作为路由器，形成互联互通的网络拓扑，在此基础上，实现容器的跨主机通信。其主机网络拓扑参见下图： 
+
+<img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw5/pictures/跨主机通信.png"/>
+
+在每一个部署Docker的主机（可能是物理机也可能是虚拟机）上都部署有一个W（即weave router，它本身也可以以一个容器的形式部署）。weave网络是由这些weave routers组成的对等端点（peer）构成，并且可以通过weave命令行来定制网络拓扑。
+
+每个部署了weave router的主机之间都会建立TCP和UDP两个连接，保证weave router之间控制面流量和数据面流量的通过。控制面由weave routers之间建立的TCP连接构成，通过它进行握手和拓扑关系信息的交换通信。控制面的通信可以被配置为加密通信。而数据面由weave routers之间建立的UDP连接构成，这些连接大部分都会加密。这些连接都是全双工的，并且可以穿越防火墙。 
+
+### weave通信流程
+
+<img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw5/pictures/跨主机通信.png"/>
+
+如上图所示，对每一个weave网络中的容器，weave都会创建一个网桥，并且在网桥和每个容器之间创建一个veth pair，一端作为容器网卡加入到容器的网络命名空间中，并为容器网卡配置ip和相应的掩码，一端连接在网桥上，最终通过宿主机上weave router将流量转发到对端主机上。其基本过程如下：
+
+* 容器流量通过veth pair到达宿主机上weave router网桥上
+
+* weave router在混杂模式下使用pcap在网桥上截获网络数据包，并排除由内核直接通过网桥转发的数据流量，例如本子网内部、本地容器之间的数据以及宿主机和本地容器之间的流量。捕获的包通过UDP转发到所其他主机的weave router端
+
+* 在接收端，weave router通过pcap将包注入到网桥上的接口，通过网桥的上的veth pair，将流量分发到容器的网卡上
 
 
+### calico与weave比较
+#### calico优势：
 
-从上面的通信过程来看，跨主机通信时，整个通信路径完全没有使用NAT或者UDP封装，性能上的损耗确实比较低。但正式由于calico的通信机制是完全基于三层的，这种机制也带来了一些缺陷，例如：
+跨主机通信时，整个通信路径完全没有使用NAT或者UDP封装，性能上的损耗比较低
 
-calico目前只支持TCP、UDP、ICMP、ICMPv6协议，如果使用其他四层协议（例如NetBIOS协议），建议使用weave、原生overlay等其他overlay网络实现。
-基于三层实现通信，在二层上没有任何加密包装，因此只能在私有的可靠网络上使用。
-流量隔离基于iptables实现，并且从etcd中获取需要生成的隔离规则，有一些性能上的隐患。
+#### calico劣势：
 
+* calico的通信机制是完全基于三层的，目前只支持TCP、UDP、ICMP、ICMPv6协议，如果使用其他四层协议（例如NetBIOS协议），建议使用weave、原生overlay等其他overlay网络实现
 
+* 基于三层实现通信，在二层上没有任何加密包装，因此只能在私有的可靠网络上使用
 
+* 流量隔离基于iptables实现，并且从etcd中获取需要生成的隔离规则，有一些性能上的隐患
 
+### weave优势：
 
+* 可以完全自定义整个集群的网络拓扑
 
+* 支持通信加密
 
+### weave劣势：
 
+* weave自定义容器数据包的封包解包方式，不够通用，传输效率比较低，性能上的损失也比较大
 
-
-
-### docker的镜像机制
-* docker镜像的内容 
-
- 主要包含两个部分：镜像层文件内容和镜像json文件。容器是一个动态的环境，每一层镜像中的文件属于静态内容，然而Dockerfile中的ENV、VOLUME、CMD等内容最终都需要落实到容器的运行环境中，而这些内容均不可能直接坐落到每一层镜像所包含的文件系统内容中，因此每一个docker镜像还会包含json文件记录与容器之间的关系。
-* docker镜像存储位置 
- 
- docker镜像层的内容一般在docker根目录的aufs路径下，为 /var/lib/docker/aufs/diff/；对于每一个镜像层，docker都会保存一份相应的 json文件，json文件的存储路径为 /var/lib/docker/graph
-
-### 通过ubuntu镜像创建一个docker容器，命名为hw4，并启动
-```
-docker create -it --name hw4 ubuntu /bin/bash
-docker start -i hw4
-```
-### 再开一个新的终端以查看容器的挂载记录
-```
-df -hT
-```
-挂载记录如下
-```
-none                         aufs       19G  7.7G  9.5G  45% /var/lib/docker/aufs/mnt/927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd
-```
-### 查看层级信息
-```
-cd /var/lib/docker/aufs/layers
-cat 927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd
-```
-显示出如下层级信息，927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd是只读层，从下至上的五层是Ubuntu镜像中的，最上面一层是容器运行时创建的
-```
-927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd-init
-3f4753a50a4ac039b7dc059818395c653f3afa8a4d0104f8db7bc42a7291c76f
-b70de0e23202701f5298813331c7f57679b30a0467efafd1eba99a119ca11e7c
-43251f5dc49cc7dbbd4344212bce2ae564d24d928cbd9933bcbe11972d727f93
-3f519af4b36f34c2caf181b699043aa679751827f903b10267f01fc6e3524d59
-7a3804e013b94d6ac8df3ad94ddd68e0e314de65febee115beb325bf2bfadb79
-```
-### 保存层级信息
-创建新的目录用来保存
-```
-mkdir /home/pkusei/hw_images
-```
-保存到创建的目录下
-```
-cp -r 7a3804e013b94d6ac8df3ad94ddd68e0e314de65febee115beb325bf2bfadb79/ \
- /home/pkusei/hw_images/0
-cp -r 3f519af4b36f34c2caf181b699043aa679751827f903b10267f01fc6e3524d59/ \
- /home/pkusei/hw_images/1
-cp -r 43251f5dc49cc7dbbd4344212bce2ae564d24d928cbd9933bcbe11972d727f93/ \
- /home/pkusei/hw_images/2
-cp -r b70de0e23202701f5298813331c7f57679b30a0467efafd1eba99a119ca11e7c/ \
- /home/pkusei/hw_images/3
-cp -r 3f4753a50a4ac039b7dc059818395c653f3afa8a4d0104f8db7bc42a7291c76f/ \
- /home/pkusei/hw_images/4
-```
-### 切换到原来的终端，在容器中安装软件
-```
-apt update
-apt install nginx
-apt install vim
-```
-### 切换到另一个终端，保存927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd最高层
-```
-cp -r 927ea757f058cf910cf9720fda932b17968ac62b353b42f8d8c8819970f47dcd/ \
- /home/pkusei/hw_images/software
-```
-### 使用aufs挂载保存的镜像
-创建挂载点
-```
-mkdir /home/pkusei/hw_mount
-```
-将镜像挂载到挂载点下
-```
-mount -t aufs -o br=/home/pkusei/hw_images/software=ro\
- :/home/pkusei/hw_images/4=ro:/home/pkusei/hw_images/3=ro\
- :/home/pkusei/hw_images/2=ro:/home/pkusei/hw_images/1=ro\
- :/home/pkusei/hw_images/0=ro none /home/pkusei/hw_mount
-```
-### 从挂载点创建新镜像
-切换到挂载点
-```
-cd /home/pkusei/hw_mount
-```
-创建镜像
-```
-tar -c . | docker import - hw4_image
-```
-### 从该镜像中创建容器，使用软件包
-创建容器
-```
-docker run -it --name hw4_image_docker hw4_image /bin/bash
-```
-查看容器中是否可以使用vim，nginx等之前安装的软件
-```
-vim 233.txt
-```
-可以使用vim指令编辑文件，可以使用之前安装好的软件包
+* 集群配置比较负载，需要通过weave命令行来手工构建网络拓扑，在大规模集群的情况下，加重了管理员的负担
 
 
-
-
-
-
+## 五、编写一个mesos framework，使用calico容器网络自动搭建一个docker容器集群（docker容器数量不少于三个），并在其中一个容器中部署jupyter notebook。运行后外部主机可以通过访问宿主机ip+8888端口使用jupyter notebook对docker集群进行管理
 
 
 
