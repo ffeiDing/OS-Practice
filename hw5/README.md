@@ -86,6 +86,28 @@ From 172.16.6.192 icmp_seq=10 Destination Port Unreachable
 iptables -D INPUT -m mac --mac-source 02:00:4d:28:00:03 -j REJECT
 ```
 ### 3、只开放本机的http服务，其余协议与端口均拒绝
+* 在1001服务器上，只接受80端口，设置默认规则为DROP
+```
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -P INPUT DROP
+```
+* 设置完毕后，与服务器1001的连接中断，需要登录燕云1001的控制台查看信息
+```
+iptables -L INPUT --line-numbers
+Chain INPUT (policy DROP)
+num  target     prot opt source               destination
+1    ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http
+```
+发现仅开放了了http服务
+
+* 恢复访问，在1001的控制台上输入命令，设置默认规则为接收
+```
+iptables -P INPUT ACCEPT
+```
+* 登录1001服务器，删除设置
+```
+iptables -D INPUT -p tcp --dport 80 -j ACCEPT
+```
 ### 4、拒绝回应来自某一特定IP地址的ping命令
 ```
 sudo su
