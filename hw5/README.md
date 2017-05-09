@@ -165,13 +165,13 @@ calico能够方便的部署在物理服务器、虚拟机或者容器环境下�
 
 <img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw5/pictures/calico%E6%9E%B6%E6%9E%84.png"/>
 
-* Felix：Calico Agent，跑在每台需要运行Workload的节点上，主要负责配置路由及ACLS等信息来确保Endpoint的连通状态。
+* Felix：Calico Agent，跑在每台需要运行Workload的节点上，主要负责配置路由及ACLS等信息来确保Endpoint的连通状态
 
-* etcd：分布式键值存储，主要负责网络元数据一致性，确保Calico网络状态的准确性。
+* etcd：分布式键值存储，主要负责网络元数据一致性，确保Calico网络状态的准确性
 
-* BGP Client (BIRD): 主要负责把Felix写入Kernel的路由信息分发到当前Calico网络，确保Workload间的通信的有效性。
+* BGP Client (BIRD): 主要负责把Felix写入Kernel的路由信息分发到当前Calico网络，确保Workload间的通信的有效性
 
-* BGP Route Reflector (BIRD)：大规模部署时使用，摒弃所有节点互联的mesh模式，通过一个或者多个BGP Route Reflector来完成集中式的路由分发。
+* BGP Route Reflector (BIRD)：大规模部署时使用，摒弃所有节点互联的mesh模式，通过一个或者多个BGP Route Reflector来完成集中式的路由分发
 
 ### 2、通信流程
 
@@ -188,7 +188,7 @@ calico能够方便的部署在物理服务器、虚拟机或者容器环境下�
 * 流量到达下一跳的宿主机后，根据当前宿主机上的路由规则，直接到达对端容器的veth pair插在宿主机的一端，最终进入容器
 
 
-## 五、调研除calico以外的任意一种容器网络方案(如weave、ovs、docker swarm overlay)，比较其与calico的优缺点。
+## 五、调研除calico以外的任意一种容器网络方案(如weave、ovs、docker swarm overlay)，比较其与calico的优缺点
 ### 1、weave
 ### weave架构
 weave通过在docker集群的每个主机上启动虚拟的路由器，将主机作为路由器，形成互联互通的网络拓扑，在此基础上，实现容器的跨主机通信。其主机网络拓扑参见下图： 
