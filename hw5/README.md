@@ -59,6 +59,10 @@ iptables -A INPUT -s 10.0.35.198 -j REJECT
 ssh pkusei@162.105.174.40 -p 1001
 ssh: connect to host 162.105.174.40 port 1001: Connection refused
 ```
+* 恢复访问，由于本机已无法登录，需要登录燕云，打开1001服务器的控制台，输入命令
+```
+iptables -D INPUT -s 10.0.35.198 -j REJECT
+```
 ### 2、拒绝来自某一特定mac地址的访问
 ### 3、只开放本机的http服务，其余协议与端口均拒绝
 ### 4、拒绝回应来自某一特定IP地址的ping命令
