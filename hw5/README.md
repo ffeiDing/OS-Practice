@@ -635,5 +635,5 @@ if __name__ == '__main__':
 nohup python scheduler.py 172.16.6.192 3 a6b6e216-eef0-421b-a23f-19da2f0ca329-S1 1fe90052-cd8d-455d-a587-239c4aee74ad-S0 1fe90052-cd8d-455d-a587-239c4aee74ad-S1 > scheduler.log 2>&1 &
 ```
 * 端口转发后，分别查看<code>http://162.105.174.40:5050</code>和<code>http://162.105.174.40:8888</code>，结果如下图所示
-<img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw5/pictures/mesos运行框架.png"/>
-<img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw5/pictures/jupyter.png"/>
+<img width="80%" height="80%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw5/pictures/mesos运行框架.png"/>
+<img width="90%" height="90%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw5/pictures/jupyter.png"/>
