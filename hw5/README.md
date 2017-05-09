@@ -239,7 +239,137 @@ weave通过在docker集群的每个主机上启动虚拟的路由器，将主机
 
 
 ## 五、编写一个mesos framework，使用calico容器网络自动搭建一个docker容器集群（docker容器数量不少于三个），并在其中一个容器中部署jupyter notebook。运行后外部主机可以通过访问宿主机ip+8888端口使用jupyter notebook对docker集群进行管理
+* 分别在三台主机上安装etcd，并使用service命令关掉自动开启etcd后台程序
+```
+apt install etcd
+service etcd stop
+```
+* 分别在三台主机上输入如下命令来创建etcd集群环境
+```
+etcd --name node0 --initial-advertise-peer-urls http://172.16.6.192:2380 \
+--listen-peer-urls http://172.16.6.192:2380 \
+--listen-client-urls http://172.16.6.192:2379,http://127.0.0.1:2379 \
+--advertise-client-urls http://172.16.6.192:2379 \
+--initial-cluster-token etcd-cluster-hw5 \
+--initial-cluster node0=http://172.16.6.192:2380,node1=http://172.16.6.224:2380,node2=http://172.16.6.213:2380 \
+--initial-cluster-state new
+```
+```
+etcd --name node1 --initial-advertise-peer-urls http://172.16.6.224:2380 \
+--listen-peer-urls http://172.16.6.224:2380 \
+--listen-client-urls http://172.16.6.224:2379,http://127.0.0.1:2379 \
+--advertise-client-urls http://172.16.6.224:2379 \
+--initial-cluster-token etcd-cluster-hw5 \
+--initial-cluster node0=http://172.16.6.192:2380,node1=http://172.16.6.224:2380,node2=http://172.16.6.213:2380 \
+--initial-cluster-state new
+```
+```
+etcd --name node2 --initial-advertise-peer-urls http://172.16.6.213:2380 \
+--listen-peer-urls http://172.16.6.213:2380 \
+--listen-client-urls http://172.16.6.213:2379,http://127.0.0.1:2379 \
+--advertise-client-urls http://172.16.6.213:2379 \
+--initial-cluster-token etcd-cluster-hw5 \
+--initial-cluster node0=http://172.16.6.192:2380,node1=http://172.16.6.224:2380,node2=http://172.16.6.213:2380 \
+--initial-cluster-state new
+```
+在1001上检查
+```
+etcdctl cluster-health
+member 9b9bffb2a23f982 is healthy: got healthy result from http://172.16.6.192:2379
+member 7fbe2c2ad27dba8d is healthy: got healthy result from http://172.16.6.224:2379
+member ce77e5ded1584bf3 is healthy: got healthy result from http://172.16.6.213:2379
+cluster is healthy
+```
+* 三台主机都需要退出其他集群网络，比如之前作业中的swarm
+```
+docker swarm leave --force
+```
+* 在三台主机上修改docker daemon，使docker支持etcd
+```
+service docker stop
+dockerd --cluster-store etcd://172.16.6.192:2379 &
+```
+```
+service docker stop
+dockerd --cluster-store etcd://172.16.6.224:2379 &
+```
+```
+service docker stop
+dockerd --cluster-store etcd://172.16.6.213:2379 &
+```
+* 在三台主机上安装calico
+```
+wget -O /usr/local/bin/calicoctl https://github.com/projectcalico/calicoctl/releases/download/v1.1.3/calicoctl
+chmod +x /usr/local/bin/calicoctl
+```
+* 在三台主机上启动calico容器
+```
+calicoctl node run --ip 172.16.6.192 --name node0
+```
+```
+calicoctl node run --ip 172.16.6.224 --name node1
+```
+```
+calicoctl node run --ip 172.16.6.213 --name node2
+```
+在1001服务器上检查
+```
+calicoctl node status
+Calico process is running.
 
+IPv4 BGP status
++--------------+-------------------+-------+----------+-------------+
+| PEER ADDRESS |     PEER TYPE     | STATE |  SINCE   |    INFO     |
++--------------+-------------------+-------+----------+-------------+
+| 172.16.6.213 | node-to-node mesh | up    | 09:18:19 | Established |
++--------------+-------------------+-------+----------+-------------+
+
+IPv6 BGP status
+No IPv6 peers found.
+```
+* 在1001主机上创建创建calico的IP池
+```
+cat << EOF | calicoctl create -f -
+- apiVersion: v1
+  kind: ipPool
+  metadata:
+    cidr: 192.0.2.0/24
+EOF
+Successfully created 1 'ipPool' resource(s)
+```
+* 通过创建Dockerfile制作jupyter镜像
+```
+FROM ubuntu:latest
+
+MAINTAINER dff
+
+RUN apt update
+RUN apt install -y sudo python3-pip ssh
+
+RUN pip3 install --upgrade pip
+RUN pip3 install jupyter
+
+RUN useradd -ms /bin/bash admin
+RUN adduser admin sudo
+RUN echo 'admin:admin' | chpasswd
+
+RUN mkdir /var/run/sshd
+
+RUN mkdir /home/admin/first_folder
+
+RUN echo 'The user name is "admin". The password is "admin" by default.' > /home/admin/README.txt
+RUN echo 'There are 5 containers running as a cluster. This one can be regarded as manager. The user name and password of other containers is also "admin".' >> /home/admin/README.txt
+RUN echo 'The ip address of this container is "192.168.0.100".' >> /home/admin/README.txt
+RUN echo 'The ip addresses of the rest containers are "192.168.0.101", "192.168.0.102", "192.168.0.103" and "192.168.0.104".' >> /home/admin/README.txt
+RUN echo 'Run command "/usr/sbin/sshd" to use ssh.' >> /home/admin/README.txt
+RUN echo 'The Internet access and sudo privilege are available. You can install software packages by "sudo apt install".' >> /home/admin/README.txt
+
+USER admin
+WORKDIR /home/admin
+
+# 执行jupyter
+CMD ["/usr/local/bin/jupyter", "notebook", "--NotebookApp.token=", "--ip=0.0.0.0", "--port=8888"]
+```
 
 
 
