@@ -629,7 +629,19 @@ if __name__ == '__main__':
 		main(sys.argv[1])
 ```
 * 在1001上启动master
+```
+./bin/mesos-master.sh --ip=172.16.6.192 --hostname=162.105.174.40 --work_dir=/var/lib/mesos
+```
 * 在1001、1002、1003上启动agent
+```
+./bin/mesos-agent.sh --master=172.16.6.192:5050 --work_dir=/var/lib/mesos --ip=172.16.6.192 --port=5051 --hostname=162.105.174.40 --containerizers=docker,mesos --image_providers=docker --isolation=docker/runtime
+```
+```
+./bin/mesos-agent.sh --master=172.16.6.192:5050 --work_dir=/var/lib/mesos --ip=172.16.6.224 --port=5052  --hostname=162.105.174.40 --containerizers=docker,mesos  --image_providers=docker --isolation=docker/runtime
+```
+```
+./bin/mesos-agent.sh --master=172.16.6.192:5050 --work_dir=/var/lib/mesos --ip=172.16.6.213 --port=5053 --hostname=162.105.174.40 --containerizers=docker,mesos --image_providers=docker --isolation=docker/runtime
+```
 * 运行scheduler.py
 ```
 nohup python scheduler.py 172.16.6.192 3 a6b6e216-eef0-421b-a23f-19da2f0ca329-S1 1fe90052-cd8d-455d-a587-239c4aee74ad-S0 1fe90052-cd8d-455d-a587-239c4aee74ad-S1 > scheduler.log 2>&1 &
