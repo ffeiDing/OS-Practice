@@ -212,7 +212,7 @@ weave通过在docker集群的每个主机上启动虚拟的路由器，将主机
 * 在接收端，weave router通过pcap将包注入到网桥上的接口，通过网桥的上的veth pair，将流量分发到容器的网卡上
 
 
-### calico与weave比较
+### 2、calico与weave比较
 #### calico优势：
 
 跨主机通信时，整个通信路径完全没有使用NAT或者UDP封装，性能上的损耗比较低
