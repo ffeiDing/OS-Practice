@@ -14,6 +14,8 @@ Paxos算法由Lamport提出，目的是让参与分布式处理的每个参与�
 
 ### 2、具体流程
 
+假设信道是可靠的，即不存在拜占庭将军问题：
+
 * 第一阶段（贿赂选民阶段）：要是有多个提议者向接受者提出提案，接受者听谁的呢？接受者会接受编号大的提议者。这里不妨假设提议者对选民进行贿赂，谁给的钱多（编号大），选民就被谁收买。选民有三种状态：（1）未被任何提议者收买；（2）被xx提议者xx贿款（编号）收买，但还没有收到提案；（3）被某一提议者以某额度贿款（编号）收买，且接受了提案。对于处于<code>状态2</code>的选民，如果此时他收到了另一土豪提议者（编号更大）的贿赂，他会很没有原则地倒戈向土豪，被土豪收买，修改自己的记录为被xx提议者（土豪）以xx贿款（土豪的编号）收买，但还没有收到提案。对于处于<code>状态3</code>的选民，如果此时他收到了另一土豪提议者（编号更大）的贿赂，他仍然会很没有原则地倒戈向土豪，被土豪收买，修改自己的记录为被xx提议者（土豪）以xx贿款（土豪的编号）收买，与状态2不同的是，他会发消息告诉土豪自己已经接受了XX提案，它是XX提议者以XX贿款贿赂我的，土豪提议者将自己的提案修改选民已经接受的提案。值得注意的是，由于是分布式处理，土豪提议者可能同时收到多个选民发来的已接受提案的信息，那么他将自己的提案改成哪个提案呢？同样是根据谁钱多听谁的的原则，他会比较这几个提案提议者的编号，接受编号最大的提议者提出的提案。
 
 * 第二阶段（投票表决阶段）：提议者提出提案，如果接受者被他收买，则接受他的提案；如果多数接受者接受了一个提议，则该提议通过，学习者记录提案包含的value。
@@ -28,92 +30,8 @@ Paxos算法由Lamport提出，目的是让参与分布式处理的每个参与�
 
 这个博弈过程最后的赢家是谁，取决于这两个提议者谁的进展更快。
 
-## 二、在服务器上使用iptables分别实现如下功能并测试
-### 1、拒绝来自某一特定IP地址的访问
-* 查看本机的IP地址
-```
-10.0.35.198
-```
-* 登录1001服务器，输入命令
-```
-iptables -A INPUT -s 10.0.35.198 -j REJECT
-```
-* 打开新的终端，尝试使用ssh登录1001服务器，发现被拒绝
-```
-ssh pkusei@162.105.174.40 -p 1001
-ssh: connect to host 162.105.174.40 port 1001: Connection refused
-```
-* 恢复访问，由于本机已无法登录，需要登录燕云，打开1001服务器的控制台，输入命令
-```
-iptables -D INPUT -s 10.0.35.198 -j REJECT
-```
-### 2、拒绝来自某一特定mac地址的访问
-* 查看1002服务器的mac地址
-```
-02:00:4d:28:00:03
-```
-* 登录1001服务器，输入命令
-```
-iptables -A INPUT -m mac --mac-source 02:00:4d:28:00:03 -j REJECT
-```
-* 登录1002服务器，ping1001服务器，发现不可达
-```
-ping 172.16.6.192
-PING 172.16.6.192 (172.16.6.192) 56(84) bytes of data.
-From 172.16.6.192 icmp_seq=7 Destination Port Unreachable
-From 172.16.6.192 icmp_seq=9 Destination Port Unreachable
-From 172.16.6.192 icmp_seq=10 Destination Port Unreachable
-...
-```
-* 恢复访问
-```
-iptables -D INPUT -m mac --mac-source 02:00:4d:28:00:03 -j REJECT
-```
-### 3、只开放本机的http服务，其余协议与端口均拒绝
-* 在1001服务器上，只接受80端口，设置默认规则为DROP
-```
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-iptables -P INPUT DROP
-```
-* 设置完毕后，与服务器1001的连接中断，需要登录燕云1001的控制台查看信息
-```
-iptables -L INPUT --line-numbers
-Chain INPUT (policy DROP)
-num  target     prot opt source               destination
-1    ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http
-```
-发现仅开放了了http服务
+## 二、模拟Raft协议工作的一个场景并叙述处理过程
 
-* 恢复访问，在1001的控制台上输入命令，设置默认规则为接收
-```
-iptables -P INPUT ACCEPT
-```
-* 登录1001服务器，删除设置
-```
-iptables -D INPUT -p tcp --dport 80 -j ACCEPT
-```
-### 4、拒绝回应来自某一特定IP地址的ping命令
-* 查看1002的IP地址
-```
-172.16.6.224
-```
-* 在1001服务器上输入命令
-```
-iptables -A INPUT -p icmp --icmp-type 8 -s 172.16.6.224 -j REJECT
-```
-* 检查效果，1002服务器向1001服务器ping
-```
-ping 172.16.6.192
-From 172.16.6.192 icmp_seq=1 Destination Port Unreachable
-From 172.16.6.192 icmp_seq=2 Destination Port Unreachable
-From 172.16.6.192 icmp_seq=3 Destination Port Unreachable
-From 172.16.6.192 icmp_seq=4 Destination Port Unreachable
-...
-```
-* 取消拒绝
-```
-iptables -D INPUT -p icmp --icmp-type 8 -s 172.16.6.224 -j REJECT
-```
 
 ## 三、解释Linux网络设备工作原理
 ### 1、bridge工作过程
