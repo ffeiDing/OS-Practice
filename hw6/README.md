@@ -46,9 +46,11 @@ Paxos算法由Lamport提出，目的是让参与分布式处理的每个参与�
 * leader selection
 
 当前有五个follower:
+
 <img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/1.png"/>
 
 每个节点等待150ms至300ms之间的一个随机数后，如果仍没有接收到leader发来的消息，该节点变为一个candidate，这里Node A最先超时变为candidate:
+
 <img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/2.png"/>
 
 
