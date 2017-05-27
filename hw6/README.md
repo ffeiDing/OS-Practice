@@ -67,9 +67,17 @@ Paxos算法由Lamport提出，目的是让参与分布式处理的每个参与�
 
 <img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/6.png"/>
 
-* 当系统有变化产生后，leader通过append entries通知follower。在这里，client发送change给leaderB，leaderB在自己的log中添加entry<code>set 5</code>，此时该信息并未被接受；leaderB向followerA、C、D、E发送该entry，活跃的follower在自己的log中添加entry<code>set 5</code>，此时该信息并未被接受，并返回消息给leaderB
+* 当系统有变化产生后，leader通过append entries通知follower，follower做出反馈。在这里，client发送change给leaderB，leaderB在自己的log中添加entry<code>set 5</code>，此时该信息并未被接受；leaderB向followerA、C、D、E发送该entry，活跃的follower在自己的log中添加entry<code>set 5</code>，此时该信息并未被接受，并返回消息给leaderB
 
-<img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/7.png"/>
+<img width="65%" height="65%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/7.png"/>
+
+* leader发现大多数节点添加了修改信息后，接受该修改信息，通知follower自己已接受该修改信息，同时还通知client修改完毕。在这里，leaderB接受<code>set 5</code>，修改自己的值为5，发送消息告诉followerA、C、D、E自己已经接受<code>set 5</code>，同时发送消息告诉client修改完毕：
+
+<img width="65%" height="65%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/8.png"/>
+
+* follower收到消息后，接受修改信息，leader继续以一定周期（heartbeat timeout）向follower发送append entries消息，攻follower确认leader还活着。该例子中，followerC、D、E接受<code>set 5</code>，修改自己的值为5，之后继续接受leader的heartbeats。
+
+<img width="65%" height="65%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/9.png"/>
 
 ## 三、解释Linux网络设备工作原理
 ### 1、bridge工作过程
