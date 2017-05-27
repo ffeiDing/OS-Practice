@@ -55,7 +55,7 @@ Paxos算法由Lamport提出，目的是让参与分布式处理的每个参与�
 
 <img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/3.png"/>
 
-* candidate获取大多数节点的vote后成为leader。这里A成为leader，B、C、D、E的election timeout仍然在转：
+* candidate获取大多数节点的vote后成为leader。这里A成为leader，B、C、D、E的election timeout仍然在转（如果考虑极端情况，即两个follower同时变为candidate，在没有follower获取大多数vote的情况下，开始新一轮选举，直到有节点获得大多数vote）：
 
 <img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/4.png"/>
 
@@ -66,6 +66,10 @@ Paxos算法由Lamport提出，目的是让参与分布式处理的每个参与�
 * 当follower没有接收到leader发来的heartbeat，它等待一个election timeout变为candidate，开始新的选举。该情境中，假设leaderA宕机，新的leaderB被选举产生：
 
 <img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/6.png"/>
+
+* 当系统有变化产生后，leader通过append entries通知follower。在这里，client发送change给leaderB，leaderB在自己的log中添加entry<code>set 5</code>，此时该信息并未被接受；leaderB向followerA、C、D、E发送该entry，活跃的follower在自己的log中添加entry<code>set 5</code>，此时该信息并未被接受，并返回消息给leaderB
+
+<img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/7.png"/>
 
 ## 三、解释Linux网络设备工作原理
 ### 1、bridge工作过程
