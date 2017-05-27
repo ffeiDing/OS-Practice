@@ -86,6 +86,16 @@ Paxos算法由Lamport提出，目的是让参与分布式处理的每个参与�
 
 根据mesos的架构，可以看到除了当前活跃的master，还有多个standby master，它们都被zookeeper监视着。一旦active master宕机，zookeeper会立刻在standby master中选举产生新的master；master是soft state的，即新选出的master可以很快重建原来master的状态，这是因为master的状态本来就是active slaves、active frameworks和running tasks的链表，slaves、schedulers与新选出的master通信，就可以恢复原来master的状态。
 
+### 2、slave或executor出错
+
+mesos会将slave或executor的错误汇报给所在framework的scheduler，framework根据自己的policies决定如何处理。
+
+### 3、scheduler出错
+
+mesos允许一个framework注册多个scheduler，这样当一个出错崩溃后，另一个可以立即被master通知来接替原来scheduler的工作。同一个framework的不同schedulers之间的状态共享取决于framework自己的算法。
+
+### 4、验证
+
 ## 四、说明在calico容器网络中，一个数据包从源容器发送到目标容器接收的具体过程
 
 ### 1、整体架构
