@@ -92,7 +92,7 @@ mesos会将slave或executor的错误汇报给所在framework的scheduler，frame
 
 ### 3、scheduler出错
 
-mesos允许一个framework注册多个scheduler，这样当一个出错崩溃后，另一个可以立即被master通知来接替原来scheduler的工作。同一个framework的不同schedulers之间的状态共享取决于framework自己的算法。
+mesos允许一个framework注册多个scheduler，这样当一个出错崩溃后，另一个可以立即被master通知来接替原来scheduler的工作。同一个framework的不同schedulers之间的状态如何共享取决于framework自己的算法。
 
 ### 4、验证
 
