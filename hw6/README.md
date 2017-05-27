@@ -82,7 +82,7 @@ Paxos算法由Lamport提出，目的是让参与分布式处理的每个参与�
 ## 三、简述Mesos的容错机制并验证
 ### 1、master宕机
 
-<img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/master_fault.png"/>
+<img width="50%" height="50%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/master_fault.png"/>
 
 根据mesos的架构，可以看到除了当前活跃的master，还有多个standby master，它们都被zookeeper监视着。一旦active master宕机，zookeeper会立刻在standby master中选举产生新的master；master是soft state的，即新选出的master可以很快重建原来master的状态，这是因为master的状态本来就是active slaves、active frameworks和running tasks的链表，slaves、schedulers与新选出的master通信，就可以恢复原来master的状态。
 
