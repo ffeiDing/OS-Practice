@@ -43,17 +43,21 @@ Paxos算法由Lamport提出，目的是让参与分布式处理的每个参与�
 
 ### 2、场景模拟
 
-* leader selection
-
-当前有五个follower:
+* 当前有五个follower:
 
 <img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/1.png"/>
 
-每个节点等待150ms至300ms之间的一个随机数后，如果仍没有接收到leader发来的消息，该节点变为一个candidate，这里Node A最先超时变为candidate:
+* 每个节点等待150ms至300ms之间的一个随机数（election timeout）后，如果仍没有接收到leader发来的消息，该节点变为一个candidate，这里Node A最先超时变为candidate:
 
 <img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/2.png"/>
 
+* candidate向follower发送vote申请，如果follower没有投过票，则投票给该candidate并重新设定自己的（election timeout），candidate投票给自己。这里，B、C、D、E投票给A，A已有自己的一票：
 
+<img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/3.png"/>
+
+* candidate获取大多数节点的vote后成为leader。这里A成为leader，B、C、D、E的election timeout仍然在转：
+
+<img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/4.png"/>
 
 ## 三、解释Linux网络设备工作原理
 ### 1、bridge工作过程
