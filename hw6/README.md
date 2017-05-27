@@ -31,6 +31,16 @@ Paxos算法由Lamport提出，目的是让参与分布式处理的每个参与�
 这个博弈过程最后的赢家是谁，取决于这两个提议者谁的进展更快。
 
 ## 二、模拟Raft协议工作的一个场景并叙述处理过程
+### 1、节点状态转换
+
+节点有三种状态，分别是follower, candidate, leader，转换条件如下：
+
+* 初始状态：所有节点初始状态都为follower，每一节点维护一个日志存储变化信息
+
+* follower -> candidate：如果一个follower很久没有收到leader发来的消息，就会成为candidate，向其他节点请求vote，其他节点会返回vote
+
+* candidate -> leader：如果一个candidate获得大部分节点的vote，它就变为一个leader，follower -> candidate -> leader 的过程被称为leader election；之后，系统的任何变化都需要通过leader，每一变化作为节点日志的一个entry，leader写入待更新的entry（未接受）后，将它发送给follower，等待直到大部分节点写入了这一entry（未接受）后，接受这一entry并更新取值，通知follower该entry被接受，follower接受entry，这一过程叫做log replication
+
 
 
 ## 三、解释Linux网络设备工作原理
