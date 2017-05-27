@@ -59,6 +59,14 @@ Paxos算法由Lamport提出，目的是让参与分布式处理的每个参与�
 
 <img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/4.png"/>
 
+* leader以一定周期（heartbeat timeout）向follower发送append entries消息，follower回复该消息。这里A以一定周期向B、C、D、E发送append entries消息，B、C、D、E回复该消息：
+
+<img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/5.png"/>
+
+* 当follower没有接收到leader发来的heartbeat，它等待一个election timeout变为candidate，开始新的选举。该情境中，假设leaderA宕机，新的leaderB被选举产生：
+
+<img width="55%" height="55%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/6.png"/>
+
 ## 三、解释Linux网络设备工作原理
 ### 1、bridge工作过程
 
