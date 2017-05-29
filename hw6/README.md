@@ -95,6 +95,42 @@ mesos会将slave或executor的错误汇报给所在framework的scheduler，frame
 mesos允许一个framework注册多个scheduler，这样当一个出错崩溃后，另一个可以立即被master通知来接替原来scheduler的工作。同一个framework的不同schedulers之间的状态如何共享取决于framework自己的算法。
 
 ### 4、验证
+* 分别在1001、1002、1003上配置zookeeper
+```
+wget http://mirror.nexcess.net/apache/zookeeper/stable/zookeeper-3.4.10.tar.gz
+tar -zxf zookeeper-3.4.10.tar.gz
+```
+* 修改zookeeper配置文件
+```
+cd zookeeper-3.4.10/
+cd conf/
+cp zoo_sample.cfg zoo.cfg
+vim zoo.cfg
+
+# 修改dataDir为
+dataDir=/var/lib/zookeeper
+
+# 添加
+# master server
+server.1=172.16.6.192:2888:3888
+server.2=172.16.6.224:2888:3888
+server.3=172.16.6.213:2888:3888
+```
+
+* 分别在三台主机的系统tmp/目录下创建/zookeeper/id_record文件，记录对应的id
+```
+# 进入系统tmp目录
+root@oo-lab:/tmp# mkdir zookeeper
+root@oo-lab:/tmp# cd zookeeper
+root@oo-lab:/tmp/zookeeper# vim id_record
+
+# 回到用户目录中，创建/var/lib/zookeeper文件夹
+root@oo-lab:/home/pkusei/zookeeper-3.4.10# mkdir /var/lib/zookeeper
+# 1001为1，1002为2，1003为3
+echo "1" > /tmp/zookeeper/id_record
+```
+
+* 查看zookeeper集群状态
 
 ## 四、说明在calico容器网络中，一个数据包从源容器发送到目标容器接收的具体过程
 
