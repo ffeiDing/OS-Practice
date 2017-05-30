@@ -239,7 +239,9 @@ I0530 03:05:11.860321 65240 network.hpp:480] ZooKeeper group PIDs: { log-replica
 
 （2）容器间互相免密登录 
 
-（3）循环判断自己是不是master，如果是，部署jupyter notebook；host表中的名字按顺序排列
+（3）循环判断自己是不是master，如果是，部署jupyter notebook
+
+（4）维护host表
 
 第三步，挂代理，使得可以从外部访问该集群
 
@@ -271,11 +273,58 @@ mount -t glusterfs server1:/my_volume /storage2
 ```
 
 * 部署etcd
+
 ```
 RUN wget -P /root https://github.com/coreos/etcd/releases/download/v3.1.7/etcd-v3.1.7-linux-amd64.tar.gz && tar -zxf /root/etcd-v3.1.7-linux-amd64.tar.gz -C /root
 RUN ln -s /root/etcd-v3.1.7-linux-amd64/etcd /usr/local/bin/etcd && ln -s /root/etcd-v3.1.7-linux-amd64/etcdctl /usr/local/bin/etcdctl
 ```
-* 
+
+启动etcd，将下段代码写入容器启动后执行的python代码中
+
+```
+def start_etcd(ip_addr):
+    args = ['/usr/local/bin/etcd', '--name', 'node' + ip_addr[-1], \
+    '--data-dir', '/var/lib/etcd', \
+    '--initial-advertise-peer-urls', 'http://' + ip_addr + ':2380', \
+    '--listen-peer-urls', 'http://' + ip_addr + ':2380', \
+    '--listen-client-urls', 'http://' + ip_addr + ':2379,http://127.0.0.1:2379', \
+    '--advertise-client-urls', 'http://' + ip_addr + ':2379', \
+    '--initial-cluster-token', 'etcd-cluster-hw6', \
+    '--initial-cluster', 'node0=http://192.168.0.100:2380,node1=http://192.168.0.101:2380,node2=http://192.168.0.102:2380,node3=http://192.168.0.103:2380,node4=http://192.168.0.104:2380', \
+    '--initial-cluster-state', 'new']
+    subprocess.Popen(args)
+```
+* 容器间互相免密登录 
+
+涉及到对公钥、私钥的处理，需要在容器启动后共享公钥，修改sshd配置文件
+```
+RUN mkdir /var/run/sshd
+RUN echo 'AuthorizedKeysFile /ssh_info/authorized_keys' >> /etc/ssh/sshd_config
+```
+将下段代码写入容器启动后执行的python代码中
+```
+def password_ssh():
+    # generate ssh private and public key
+	  os.system('ssh-keygen -f /home/admin/.ssh/id_rsa -t rsa -N ""')
+    # add the public key to shared 'authorized_keys' file
+	  os.system('echo "admin" | sudo -S bash -c "cat /home/admin/.ssh/id_rsa.pub >> /ssh_info/authorized_keys"')
+    # start ssh service
+	  os.system('/usr/sbin/service ssh start')
+```
+
+* 在master上部署jupyter notebook
+
+通过一个while循环，不断向etcd集群发送消息，检查自己是否为master，算法如下：
+
+（1）如果是master且是第一次成为master，部署jupyter notebook，删除原来的master宕机后在kv对中留下的/hosts目录，新建kv对/hosts/0192.168.0.10x -> 192.168.0.10x（使用0开头表示是leader）。在分布式kv对中更新/hosts目录的存活时间为30秒，这是为了如果有follower死掉，可以在30秒重新创建/hosts目录然后清除掉死掉的follower信息；对于不是刚刚成为master的情况不做处理
+
+（2) 如果是follower，则继续尝试创建kv对/hosts/192.168.0.10x -> 192.168.0.10x
+
+
+
+
+
+
 
 
 
