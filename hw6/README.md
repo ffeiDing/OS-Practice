@@ -235,6 +235,10 @@ I0530 03:05:11.860321 65240 network.hpp:480] ZooKeeper group PIDs: { log-replica
 
 第二步，挂代理，使得可以从外部访问该集群
 
+第三步，创建framework，以calico网络启动容器
+
+### 2、具体流程
+
 
 
 
