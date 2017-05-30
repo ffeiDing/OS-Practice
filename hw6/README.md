@@ -433,6 +433,11 @@ def main(ip_addr):
 if __name__ == '__main__':
 	main(sys.argv[1])
 ```
+* 以Dockerfile生成etcd_image镜像
+```
+docker build -t etcd_image .
+```
+
 * 编写框架，在框架中以calico网络启动容器
 ```
 #!/usr/bin/env python2.7
@@ -592,3 +597,5 @@ python hw6_scheduler.py zk://172.16.6.192:2181,172.16.6.224:2181,172.16.6.213:21
 
 <img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/taskrunning.png"/>
 
+* 设置代理
+<img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/jupyter.png"/>
