@@ -231,24 +231,28 @@ I0530 03:05:11.860321 65240 network.hpp:480] ZooKeeper group PIDs: { log-replica
 
 ## 四、综合作业
 ### 1、整体思路
-第一步，通过镜像创建容器，需要在镜像中指定容器的功能：
+第一步，在三台主机上以glusterfs实现分布式存储
+
+第二步，通过镜像创建容器，需要在镜像中指定容器的功能：
 
 （1）部署etcd 
 
-（2）判断自己是不是master，如果是，部署jupyter notebook 
+（2）容器间互相免密登录 
 
-（3）容器间互相免密登录 
+（3）循环判断自己是不是master，如果是，部署jupyter notebook；host表中的名字按顺序排列
 
-（4）host表中的名字按顺序排列
+第三步，挂代理，使得可以从外部访问该集群
 
-
-第二步，挂代理，使得可以从外部访问该集群
-
-第三步，创建framework，以calico网络启动容器
+第四步，创建framework，以calico网络启动容器
 
 ### 2、具体流程
 
-
+* 部署etcd
+```
+RUN wget -P /root https://github.com/coreos/etcd/releases/download/v3.1.7/etcd-v3.1.7-linux-amd64.tar.gz && tar -zxf /root/etcd-v3.1.7-linux-amd64.tar.gz -C /root
+RUN ln -s /root/etcd-v3.1.7-linux-amd64/etcd /usr/local/bin/etcd && ln -s /root/etcd-v3.1.7-linux-amd64/etcdctl /usr/local/bin/etcdctl
+```
+* 
 
 
 
