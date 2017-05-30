@@ -232,6 +232,7 @@ I0530 03:05:11.860321 65240 network.hpp:480] ZooKeeper group PIDs: { log-replica
 ## 四、综合作业
 ### 1、整体思路
 第一步，通过镜像创建容器，需要在镜像中指定容器的功能：
+
 （1）部署etcd 
 
 （2）判断自己是不是master，如果是，部署jupyter notebook 
