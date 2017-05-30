@@ -164,12 +164,14 @@ Mode: follower
 --quorum=2 --ip=172.16.6.213 --port=6060 --cluster=mesos_with_zookeeper \
 --hostname=162.105.174.40 --work_dir=/var/lib/mesos
 ```
-观察日志，发现1002被选为master
+
+* 观察日志，发现1002被选为master
 ```
 I0529 06:19:57.375041 29924 master.cpp:2137] The newly elected leader is master@172.16.6.224:5050 with id ef10001b-a6f2-4350-a6f4-58f448f676bd
 I0529 06:19:57.255020 63587 network.hpp:480] ZooKeeper group PIDs: { log-replica(1)@172.16.6.192:7070, log-replica(1)@172.16.6.213:6060, log-replica(1)@172.16.6.224:5050 }
 ```
 
+* 在三台主机上各启动一个agent
 ```
 # 1001 
 ./mesos-agent.sh --master=zk://172.16.6.192:2181,172.16.6.224:2181,172.16.6.213:2181/mesos --work_dir=/var/lib/mesos --log_dir=/var/log/mesos --ip=172.16.6.192 --port=7071 \
@@ -185,6 +187,46 @@ I0529 06:19:57.255020 63587 network.hpp:480] ZooKeeper group PIDs: { log-replica
 ./mesos-agent.sh --master=zk://172.16.6.192:2181,172.16.6.224:2181,172.16.6.213:2181/mesos --work_dir=/var/lib/mesos --log_dir=/var/log/mesos --ip=172.16.6.213 --port=7073 \
 --hostname=162.105.174.40 --containerizers=docker,mesos --image_providers=docker \
 --isolation=docker/runtime
+```
+
+* 运行一个简单的test_scheduler以供测试
+```
+python test_scheduler.py zk://172.16.6.192:2181,172.16.6.224:2181,172.16.6.213:2181/mesos
+
+# 成功运行
+DEBUG:root:Status update TID 0552b6e0-c955-4b13-ae1c-b12adc147dc5 TASK_FINISHED
+DEBUG:root:Status update TID a2c05e5d-8d0b-474c-a1c7-a3e8c4422335 TASK_FINISHED
+DEBUG:root:Status update TID 33946d3c-9319-4624-a5b9-74fc781114ad TASK_RUNNING
+DEBUG:root:Status update TID 2615912f-567a-4bfb-a61a-a6599c6af5e3 TASK_RUNNING
+DEBUG:root:Status update TID 6b5f7b48-7a25-4963-8aef-aef4be9edc93 TASK_RUNNING
+DEBUG:root:Status update TID f38d6280-5340-4381-a08f-9389be24719f TASK_RUNNING
+DEBUG:root:Status update TID 328bad6b-b6b2-4b88-9db2-00f00fdff938 TASK_FINISHED
+DEBUG:root:Status update TID 5f50704e-2b60-4b68-8bec-3a66b4935a15 TASK_RUNNING
+DEBUG:root:Status update TID b1879949-909f-485a-aa1b-e32200593262 TASK_FINISHED
+DEBUG:root:Status update TID ea67958f-e039-4162-b6ab-8c8d00d994ca TASK_FINISHED
+DEBUG:root:Status update TID c1cb8c44-188a-4cad-bee9-364f4b86c938 TASK_RUNNING
+DEBUG:root:Status update TID 83bf0a63-f04d-4860-b3f7-01d2425e70c5 TASK_RUNNING
+DEBUG:root:Status update TID db79f1ca-8583-4ace-8e36-fcc44b675af5 TASK_FINISHED
+DEBUG:root:Status update TID 81bfe027-ee30-4611-a99a-8f0c5a373e28 TASK_RUNNING
+DEBUG:root:Status update TID 4449024c-682d-4951-97c4-40a4bb185788 TASK_FINISHED
+DEBUG:root:Status update TID 77db5e5f-d328-4938-9e4f-3a9eb3c1eaef TASK_FINISHED
+DEBUG:root:Status update TID 84fc10fc-87b3-4ccb-89a5-6952188edd30 TASK_RUNNING
+DEBUG:root:Status update TID 5d2b9764-741f-4830-b1c9-bf840a4f24a3 TASK_RUNNING
+```
+
+* 终止master后，发现新的master被选举产生
+```
+I0530 03:03:14.065492 43034 network.hpp:480] ZooKeeper group PIDs: { log-replica(1)@172.16.6.192:7070, log-replica(1)@172.16.6.213:6060 }
+I0530 03:03:14.072106 43032 zookeeper.cpp:259] A new leading master (UPID=master@172.16.6.213:6060) is detected
+I0530 03:03:14.074673 43032 master.cpp:2137] The newly elected leader is master@172.16.6.213:6060 with id 55a901ac-4352-457f-9942-7315450300c0
+```
+
+* 恢复原来的master后，原来的master自杀，以普通身份加入zookeeper集群
+```
+W0530 03:05:11.736099 65237 master.cpp:6846] Master returning resources offered to framework c77b154b-823c-48d3-b054-a61f7ed1a22c-0000 because the framework has terminated or is inactive
+I0530 03:05:11.737133 65237 master.cpp:2137] The newly elected leader is None
+Lost leadership... committing suicide!
+I0530 03:05:11.860321 65240 network.hpp:480] ZooKeeper group PIDs: { log-replica(1)@172.16.6.192:7070, log-replica(1)@172.16.6.213:6060, log-replica(1)@172.16.6.224:5050 }
 ```
 
 ## 四、综合作业
