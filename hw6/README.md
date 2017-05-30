@@ -589,5 +589,5 @@ if __name__ == '__main__':
 python hw6_scheduler.py zk://172.16.6.192:2181,172.16.6.224:2181,172.16.6.213:2181/mesos
 ```
 查看162.105.0.40:6060，发现五个容器为running状态：
-<img width="70%" height="70%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/taskrunning.png"/>
+<img width="90%" height="90%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/taskrunning.png"/>
 
