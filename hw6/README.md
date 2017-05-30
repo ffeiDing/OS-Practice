@@ -597,5 +597,40 @@ python hw6_scheduler.py zk://172.16.6.192:2181,172.16.6.224:2181,172.16.6.213:21
 
 <img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/taskrunning.png"/>
 
-* 设置代理
+* 设置代理，每个主机不断发送http请求查找etcd的master。因为转发的是1001的8888端口，如果master在1001上，则直接将其代理到1000机的8888端口。如果master在1002或1003上，则不仅需要将其代理到相应主机的8888端口，1000机的代理还需要知道当前master在哪，将1001机或1002机的8888端口代理到自己1000机的8888端口。查看162.105.0.40:8888
+
 <img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/jupyter.png"/>
+
+### 3、检验
+
+* 在jupyter上新建Terminal，查看master的ip地址为192.168.4.102，查看hosts表
+
+<img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/a_1.png"/>
+
+<img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/a_2.png"/>
+
+* ssh免密登录，登录cluster-3之后，可以直接登录cluster-0
+
+<img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/a_3.png"/>
+
+* 分布式存储，在一个容器里（cluster-0）root模式下写文件，其他容器（比如cluster-1）中可以看到
+
+<img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/a_4.png"/>
+
+* 当其中一个容器（非master）被杀死时，集群仍满足上一个条件：停止一个容器后，可以看到一段时间后，hosts列表的变化，重启该容器后，一段时间后hosts列表又恢复原状，但该node对应的task显示为failed
+
+<img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/a_5.png"/>
+
+<img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/a_6.png"/>
+
+* 当etcd master节点被杀死时，jupyter notebook会转移到新的master节点提供服务，集群仍满足上一个条件
+
+停止master容器后，一段时间后新的master被选举产生（192.168.4.104）：
+
+<img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/a_7.png"/>
+
+重启该容器后，一段时间后hosts列表又恢复原状，该容器以follower的身份出现，但该node对应的task显示为failed
+
+<img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/a_8.png"/>
+
+<img width="100%" height="100%" src="https://github.com/ffeiDing/OS-Practice/blob/master/hw6/picture/a_9.png"/>
