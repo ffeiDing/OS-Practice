@@ -246,6 +246,29 @@ I0530 03:05:11.860321 65240 network.hpp:480] ZooKeeper group PIDs: { log-replica
 第四步，创建framework，以calico网络启动容器
 
 ### 2、具体流程
+* 在三台主机上以glusterfs实现分布式存储，具体参考hw4
+
+```
+# 在三台主机上安装gluterfs
+apt install glusterfs-server
+
+# 分别修改/etc/hosts，下面是1001的例子
+vim /etc/hosts
+127.0.0.1       server1 localhost
+127.0.1.1       oo-lab.cs1cloud.internal        oo-lab
+172.16.6.224    server2
+172.16.6.213    server3
+
+# 创建卷
+mkdir -p /data/brick
+gluster volume create my_volume replica 3 server1:/data/brick server2:/data/brick server3:/data/brick force
+gluster volume start my_volume
+gluster volume info
+
+# 在三台主机上分别创建挂载点，挂载my_volume卷
+mkdir -p /storage2
+mount -t glusterfs server1:/my_volume /storage2
+```
 
 * 部署etcd
 ```
