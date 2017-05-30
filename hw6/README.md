@@ -94,7 +94,7 @@ mesos会将slave或executor的错误汇报给所在framework的scheduler，frame
 
 mesos允许一个framework注册多个scheduler，这样当一个出错崩溃后，另一个可以立即被master通知来接替原来scheduler的工作。同一个framework的不同schedulers之间的状态如何共享取决于framework自己的算法。
 
-### 4、验证master宕机
+### 4、验证master宕机后的恢复
 * 分别在1001、1002、1003上配置zookeeper
 ```
 wget http://mirror.nexcess.net/apache/zookeeper/stable/zookeeper-3.4.10.tar.gz
