@@ -316,9 +316,9 @@ def password_ssh():
 
 通过一个while循环，不断向etcd集群发送消息，检查自己是否为master，算法如下：
 
-（1）如果是master且是第一次成为master，部署jupyter notebook，删除原来的master宕机后在kv对中留下的/hosts目录，新建kv对/hosts/0192.168.0.10x -> 192.168.0.10x（使用0开头表示是leader）。在分布式kv对中更新/hosts目录的存活时间为30秒，这是为了如果有follower死掉，可以在30秒重新创建/hosts目录然后清除掉死掉的follower信息；对于不是刚刚成为master的情况继续添加host条目
+（1）如果是master且是第一次成为master，部署jupyter notebook，删除原来的master宕机后在kv对中留下的/hosts目录，新建kv对/hosts/0192.168.4.10x -> 192.168.4.10x（使用0开头表示是leader）。在分布式kv对中更新/hosts目录的存活时间为30秒，这是为了如果有follower死掉，可以在30秒重新创建/hosts目录然后清除掉死掉的follower信息；对于不是刚刚成为master的情况继续添加host条目
 
-（2）如果是follower，则继续尝试创建kv对/hosts/192.168.0.10x -> 192.168.0.10x
+（2）如果是follower，则继续尝试创建kv对/hosts/192.168.4.10x -> 192.168.4.10x
 
 ```
 def main():
@@ -476,7 +476,7 @@ class DockerJupyterScheduler(Scheduler):
 			# ip
 			ip = Dict()
 			ip.key = 'ip'
-			ip.value = '192.168.0.10' + str(self.launched_task)
+			ip.value = '192.168.4.10' + str(self.launched_task)
 
 			# hostname
 			hostname = Dict()
